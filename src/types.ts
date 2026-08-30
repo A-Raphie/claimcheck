@@ -11,6 +11,8 @@ export interface ClaimResult {
   verdict: Verdict;
   citation: string;
   rationale: string;
+  /** For UNVERIFIABLE claims: the missing evidence that would decide it. */
+  settlesWith?: string;
   evidence: EvidenceItem[];
 }
 

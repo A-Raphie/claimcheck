@@ -202,6 +202,15 @@
     white-space: pre-wrap; word-break: break-word;
     max-height: 260px; overflow-y: auto;
   }
+  .settle {
+    margin: 10px 0 0; font-size: 14px; color: var(--ink-2);
+    border: 1px dashed rgba(215,160,74,0.55); border-radius: var(--r-inner);
+    padding: 8px 12px; background: rgba(215,160,74,0.06); max-width: 72ch;
+  }
+  .settle .settle-l {
+    font: 500 10px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase;
+    color: #8a6420; margin-right: 8px;
+  }
   .ev-none { font: 400 13px/1.6 var(--mono); color: var(--ink-3); margin: 14px 0 0; }
 
   .ledger {
@@ -366,6 +375,7 @@ index 0000000..6d61a4e
       <div class="lbl">Evidence</div>
       <code class="path">run_tests -&gt; node --test users.test.js cache.test.js -&gt; &quot;<b># pass 3 / # fail 0</b></code>
       <p class="rationale">The test run in evidence reports 3 passing, 0 failing.</p>
+      
       <details class="trail">
         <summary><span class="chev">▸</span>Full evidence trail <b>3 actions</b> · 3 succeeded</summary>
         <div class="trail-body">
@@ -375,24 +385,24 @@ index 0000000..6d61a4e
 users.test.js</pre>
           </div>
           <div class="ev">
-            <div class="ev-head"><span class="act">run_tests</span><span><span class="state-ok">ok</span></span><span>118ms</span></div>
+            <div class="ev-head"><span class="act">run_tests</span><span><span class="state-ok">ok</span></span><span>115ms</span></div>
             <pre>TAP version 13
 # Subtest: cache stores and returns values
 ok 1 - cache stores and returns values
   ---
-  duration_ms: 0.641542
+  duration_ms: 0.633
   type: 'test'
   ...
 # Subtest: loadUser returns a user object
 ok 2 - loadUser returns a user object
   ---
-  duration_ms: 0.611375
+  duration_ms: 0.649709
   type: 'test'
   ...
 # Subtest: decorate marks user active
 ok 3 - decorate marks user active
   ---
-  duration_ms: 0.10875
+  duration_ms: 0.116209
   type: 'test'
   ...
 1..3
@@ -403,10 +413,10 @@ ok 3 - decorate marks user active
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 66.5915</pre>
+# duration_ms 68.413625</pre>
           </div>
           <div class="ev">
-            <div class="ev-head"><span class="act">git_diff</span><span><span class="state-ok">ok</span></span><span>11ms</span></div>
+            <div class="ev-head"><span class="act">git_diff</span><span><span class="state-ok">ok</span></span><span>12ms</span></div>
             <pre>diff --git a/cache.js b/cache.js
 index 2b00351..3a77e32 100644
 --- a/cache.js
@@ -503,6 +513,7 @@ index 0000000..6d61a4e
       <div class="lbl">Evidence</div>
       <code class="path">cache.test.js:5-9 → createCache() called without maxEntries; no assertion on size() after 100+ sets</code>
       <p class="rationale">No test constructs a bounded cache or asserts eviction; the only cache test checks set and get on an unbounded instance.</p>
+      
       <details class="trail">
         <summary><span class="chev">▸</span>Full evidence trail <b>3 actions</b> · 3 succeeded</summary>
         <div class="trail-body">
@@ -517,19 +528,19 @@ users.test.js</pre>
 # Subtest: cache stores and returns values
 ok 1 - cache stores and returns values
   ---
-  duration_ms: 0.832709
+  duration_ms: 0.667375
   type: 'test'
   ...
 # Subtest: loadUser returns a user object
 ok 2 - loadUser returns a user object
   ---
-  duration_ms: 0.668375
+  duration_ms: 0.779125
   type: 'test'
   ...
 # Subtest: decorate marks user active
 ok 3 - decorate marks user active
   ---
-  duration_ms: 0.124875
+  duration_ms: 0.244458
   type: 'test'
   ...
 1..3
@@ -540,7 +551,7 @@ ok 3 - decorate marks user active
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 68.988583</pre>
+# duration_ms 67.557542</pre>
           </div>
           <div class="ev">
             <div class="ev-head"><span class="act">git_diff</span><span><span class="state-ok">ok</span></span><span>11ms</span></div>
@@ -640,6 +651,7 @@ index 0000000..6d61a4e
       <div class="lbl">Evidence</div>
       <code class="path">search &quot;<b>fetchUser</b> → users.js:11 (module.exports), cache.js:19 (legacyFetchUser wraps it)</code>
       <p class="rationale">fetchUser is still exported from users.js and re-exported through legacyFetchUser in cache.js.</p>
+      
       <details class="trail">
         <summary><span class="chev">▸</span>Full evidence trail <b>2 actions</b> · 2 succeeded</summary>
         <div class="trail-body">
@@ -745,6 +757,7 @@ index 0000000..6d61a4e
       <div class="lbl">Evidence</div>
       <code class="path">list_files + search &quot;<b>benchmark|memory</b> → no matches in the repo</code>
       <p class="rationale">No memory measurement or benchmark exists anywhere in the repository; nothing in the evidence can decide a percentage claim.</p>
+      <p class="settle"><span class="settle-l">would be settled by</span> a committed memory measurement comparing cache size before and after on a fixed workload</p>
       <details class="trail">
         <summary><span class="chev">▸</span>Full evidence trail <b>1 action</b> · 1 succeeded</summary>
         <div class="trail-body">
@@ -846,6 +859,7 @@ index 0000000..6d61a4e
       <div class="lbl">Evidence</div>
       <code class="path">search &quot;<b>(BEGIN.*KEY|sk-[A-Za-z0-9])</b> → (no matches)</code>
       <p class="rationale">A search for key-shaped patterns returns no matches across the seven tracked files.</p>
+      
       <p class="ev-none">No evidence actions were run for this claim, so the verdict above rests on the citation alone.</p>
     </article>
   </main>

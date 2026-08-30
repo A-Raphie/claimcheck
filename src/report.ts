@@ -232,6 +232,15 @@ export function renderHtmlReport(report: RunReport): string {
     white-space: pre-wrap; word-break: break-word;
     max-height: 260px; overflow-y: auto;
   }
+  .settle {
+    margin: 10px 0 0; font-size: 14px; color: var(--ink-2);
+    border: 1px dashed rgba(215,160,74,0.55); border-radius: var(--r-inner);
+    padding: 8px 12px; background: rgba(215,160,74,0.06); max-width: 72ch;
+  }
+  .settle .settle-l {
+    font: 500 10px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase;
+    color: #8a6420; margin-right: 8px;
+  }
   .ev-none { font: 400 13px/1.6 var(--mono); color: var(--ink-3); margin: 14px 0 0; }
 
   .ledger {
@@ -345,6 +354,7 @@ ${c.evidence.map(evBlock).join("\n")}
       <div class="lbl">Evidence</div>
       <code class="path">${emphasize(escapeHtml(c.citation))}</code>
       <p class="rationale">${escapeHtml(c.rationale)}</p>
+      ${c.verdict === "UNVERIFIABLE" && c.settlesWith ? `<p class="settle"><span class="settle-l">would be settled by</span> ${escapeHtml(c.settlesWith)}</p>` : ""}
 ${trail}
     </article>`;
 }

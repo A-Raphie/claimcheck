@@ -33,10 +33,12 @@ export class MockAgent extends Agent {
     if (call.label.startsWith("verifier:")) {
       const claims = extractClaims(call.user);
       const claim = claims[0];
+      const verdict = mockVerdictFromText(claim?.text ?? "", call.user);
       return JSON.stringify({
-        verdict: mockVerdictFromText(claim?.text ?? "", call.user),
+        verdict,
         citation: "mock citation from collected evidence",
         rationale: "mock verifier verdict",
+        settlesWith: verdict === "UNVERIFIABLE" ? mockSettlesWith(claim?.text ?? "") : undefined,
       });
     }
     return JSON.stringify({});
@@ -84,6 +86,14 @@ function keyToken(text: string): string {
   if (quoted) return quoted[1] || quoted[2];
   const words = text.split(/\s+/).filter((w) => w.length > 5 && /^[a-zA-Z]+$/.test(w));
   return words[0] ?? text.slice(0, 10);
+}
+
+function mockSettlesWith(text: string): string {
+  const t = text.toLowerCase();
+  if (/faster|twice|performance/.test(t)) return "a benchmark timing this code on a fixed input, committed to the repo";
+  if (/memory|percent/.test(t)) return "a memory measurement comparing before and after on a fixed workload";
+  if (/readab|clear|maintain/.test(t)) return "nothing in a repository can settle subjective quality; a style guide could";
+  return "a committed measurement or test that exercises the claimed behavior";
 }
 
 function mockVerdictFromText(text: string, evidence: string): Verdict {

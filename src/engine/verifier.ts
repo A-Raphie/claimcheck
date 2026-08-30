@@ -19,9 +19,13 @@ Strictness rules:
 - citation must quote or reference the decisive evidence: a file path with line numbers,
   a command plus its key output line, or a diff hunk. Keep it under 240 characters.
 - rationale must be one or two sentences a reviewer can re-check against the evidence.
+- For UNVERIFIABLE claims only: settlesWith names the concrete missing evidence that
+  would decide the claim (e.g. "a benchmark timing parseList on 10k inputs", "a test
+  that calls validateName with an empty string"). One sentence, actionable. For
+  VERIFIED and REFUTED, omit it.
 
 Reply ONLY with JSON:
-{"verdict":"VERIFIED|REFUTED|UNVERIFIABLE","citation":"...","rationale":"..."}`;
+{"verdict":"VERIFIED|REFUTED|UNVERIFIABLE","citation":"...","rationale":"...","settlesWith":"..."}`;
 
 const VERDICTS: Verdict[] = ["VERIFIED", "REFUTED", "UNVERIFIABLE"];
 
@@ -37,7 +41,7 @@ export async function verifyClaim(
         )
         .join("\n\n")
     : "(no evidence was collected)";
-  const reply = await agent.chatJson<{ verdict: string; citation?: string; rationale?: string }>({
+  const reply = await agent.chatJson<{ verdict: string; citation?: string; rationale?: string; settlesWith?: string }>({
     label: `verifier:${input.claim.id}`,
     system: VERIFIER_SYSTEM,
     user: [
@@ -55,6 +59,7 @@ export async function verifyClaim(
     verdict,
     citation: (reply.citation || "(no citation provided)").slice(0, 300),
     rationale: (reply.rationale || "(no rationale provided)").slice(0, 600),
+    settlesWith: reply.settlesWith ? String(reply.settlesWith).slice(0, 240) : undefined,
     evidence: input.evidence,
   };
 }

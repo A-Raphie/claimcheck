@@ -21,11 +21,18 @@ every claim from the diff, which is exactly the work reviewers skip when the que
 
 ## Why solving it is valuable
 
+The challenge's own theme names the problem: "AI can produce convincing code in seconds.
+Real engineering begins when convincing is not enough." micro1's blog says the same thing
+from the sponsor side: "as models have gotten better, the bottleneck has shifted from
+training toward evaluation." Claimcheck is an instrument for exactly that bottleneck,
+pointed at agent-made changes.
+
 A verdict table with citations turns "trust the agent" into "check the agent" in under a
 minute. False confidence gets caught before merge, and claims that cannot be checked from
 the repository (performance numbers, subjective quality) are named as such instead of
-slipping through as if they were facts. The same instrument works pointed inward: run it
-on your own change before someone else does.
+slipping through as if they were facts. For those, the report says what evidence would
+settle the claim: add the benchmark, write the test, run the measurement. The same
+instrument works pointed inward: run it on your own change before someone else does.
 
 ## How it works
 
@@ -55,8 +62,9 @@ Primary metric: claim verdict accuracy against planted ground truth.
 
 Eval corpus: 13 generated repository cases (28 claims) mixing true claims, false claims,
 and claims that cannot be decided from the repository, plus one hard case with four claim
-classes in one change. Every case is regenerated deterministically by
-`node eval/build-cases.mjs`.
+classes in one change. A 14th case is a holdout (different module shape, mixed classes)
+kept out of the headline numbers and run once as generality evidence. Every case is
+regenerated deterministically by `node eval/build-cases.mjs`.
 
 | Metric | Simple baseline | Agent solution | Change |
 |---|---|---|---|

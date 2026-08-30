@@ -300,6 +300,33 @@ const CASES = [
       C4: { verdict: "UNVERIFIABLE", note: "no memory measurement exists in the repo." },
     },
   }),
+
+  caseSpec({
+    id: "14-holdout",
+    description: "HOLDOUT (generality evidence, added after the 13-case run): queue utility, different module shape, mixed claim classes",
+    hard: true,
+    before: {
+      "jobq.js": `function createQueue() {\n  const items = [];\n  return {\n    push(job) {\n      items.push(job);\n    },\n    drain(handler) {\n      while (items.length > 0) {\n        handler(items.shift());\n      }\n    },\n  };\n}\n\nfunction describeQueue(q) {\n  return "queue";\n}\n\nmodule.exports = { createQueue, describeQueue };\n`,
+      "jobq.test.js": `const test = require("node:test");\nconst assert = require("node:assert");\nconst { createQueue } = require("./jobq.js");\n\ntest("drain processes pushed jobs in order", () => {\n  const seen = [];\n  const q = createQueue();\n  q.push("a");\n  q.push("b");\n  q.drain((job) => seen.push(job));\n  assert.deepEqual(seen, ["a", "b"]);\n});\n`,
+    },
+    change: {
+      "jobq.js": `function createQueue() {\n  const items = [];\n  return {\n    push(job) {\n      items.push(job);\n    },\n    drain(handler) {\n      while (items.length > 0) {\n        handler(items.shift());\n      }\n    },\n    size() {\n      return items.length;\n    },\n  };\n}\n\nmodule.exports = { createQueue };\n`,
+      "jobq.test.js": `const test = require("node:test");\nconst assert = require("node:assert");\nconst { createQueue } = require("./jobq.js");\n\ntest("drain processes pushed jobs in order", () => {\n  const seen = [];\n  const q = createQueue();\n  q.push("a");\n  q.push("b");\n  q.drain((job) => seen.push(job));\n  assert.deepEqual(seen, ["a", "b"]);\n});\n\ntest("size reflects pushes", () => {\n  const q = createQueue();\n  q.push("x");\n  assert.equal(q.size(), 1);\n});\n`,
+    },
+    commitMessage: "feat: queue size method, drop describeQueue",
+    claims: [
+      { id: "C1", text: "All tests pass after this change." },
+      { id: "C2", text: "The drain method now processes jobs with concurrency." },
+      { id: "C3", text: "This change removes the describeQueue function from the public API." },
+      { id: "C4", text: "The queue handles thousands of jobs efficiently." },
+    ],
+    groundTruth: {
+      C1: { verdict: "VERIFIED", note: "node --test passes both tests." },
+      C2: { verdict: "REFUTED", note: "drain is unchanged: strictly sequential while loop, no concurrency." },
+      C3: { verdict: "VERIFIED", note: "describeQueue definition and export are gone from jobq.js." },
+      C4: { verdict: "UNVERIFIABLE", note: "no throughput measurement exists in the repo." },
+    },
+  }),
 ];
 
 function caseSpec(spec) {
