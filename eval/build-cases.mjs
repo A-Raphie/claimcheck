@@ -281,7 +281,7 @@ const CASES = [
       "cache.js": `function createCache() {\n  const store = new Map();\n  return {\n    get(key) {\n      return store.get(key);\n    },\n    set(key, value) {\n      store.set(key, value);\n    },\n  };\n}\n\nmodule.exports = { createCache };\n`,
     },
     change: {
-      "users.js": `async function loadUser(id) {\n  return { id, name: "user" + id };\n}\n\nfunction decorate(user) {\n  return Object.assign({ active: true }, user);\n}\n\nmodule.exports = { loadUser, decorate, fetchUser };\n`,
+      "users.js": `async function loadUser(id) {\n  return { id, name: "user" + id };\n}\n\n/**\n * Deprecated: use loadUser instead. Kept for backwards compatibility.\n */\nfunction fetchUser(id) {\n  return { id, name: "user" + id };\n}\n\nfunction decorate(user) {\n  return Object.assign({ active: true }, user);\n}\n\nmodule.exports = { loadUser, decorate, fetchUser };\n`,
       "cache.js": `function createCache(maxEntries = 100) {\n  const store = new Map();\n  return {\n    get(key) {\n      return store.get(key);\n    },\n    set(key, value) {\n      if (maxEntries > 0 && store.size >= maxEntries) {\n        const oldest = store.keys().next().value;\n        store.delete(oldest);\n      }\n      store.set(key, value);\n    },\n    size() {\n      return store.size;\n    },\n  };\n}\n\nconst legacyFetchUser = (id) => require("./users.js").fetchUser(id);\n\nmodule.exports = { createCache, legacyFetchUser };\n`,
       "users.test.js": `const test = require("node:test");\nconst assert = require("node:assert");\nconst { loadUser, decorate } = require("./users.js");\n\ntest("loadUser returns a user object", async () => {\n  const user = await loadUser(7);\n  assert.equal(user.id, 7);\n});\n\ntest("decorate marks user active", () => {\n  assert.equal(decorate({ id: 1 }).active, true);\n});\n`,
       "cache.test.js": `const test = require("node:test");\nconst assert = require("node:assert");\nconst { createCache } = require("./cache.js");\n\ntest("cache stores and returns values", () => {\n  const cache = createCache();\n  cache.set("a", 1);\n  assert.equal(cache.get("a"), 1);\n});\n`,
@@ -306,18 +306,31 @@ function caseSpec(spec) {
   return spec;
 }
 
+// Pins every case repo to CommonJS regardless of where it sits on disk: without a
+// local package.json, running tests in place walks up to the project's
+// "type": "module" and every require() explodes. Found by the evidence trail.
+function withPinnedModuleType(files, caseId) {
+  const base = { name: caseId, private: true, type: "commonjs" };
+  if (!files["package.json"]) {
+    return { ...files, "package.json": JSON.stringify(base, null, 2) + "\n" };
+  }
+  const pkg = JSON.parse(files["package.json"]);
+  if (!pkg.type) pkg.type = "commonjs";
+  return { ...files, "package.json": JSON.stringify(pkg, null, 2) + "\n" };
+}
+
 async function buildCase(spec) {
   const caseDir = join("eval", "cases", spec.id);
   await rm(caseDir, { recursive: true, force: true });
   const repoDir = join(caseDir, "repo");
   await mkdir(repoDir, { recursive: true });
 
-  await writeFiles(repoDir, spec.before);
+  await writeFiles(repoDir, withPinnedModuleType(spec.before, spec.id));
   git(repoDir, ["init", "-q", "-b", "main"]);
   git(repoDir, ["add", "-A"]);
   git(repoDir, ["commit", "-q", "-m", "before"]);
 
-  await writeFiles(repoDir, spec.change);
+  await writeFiles(repoDir, withPinnedModuleType(spec.change, spec.id));
   git(repoDir, ["add", "-A"]);
   git(repoDir, ["commit", "-q", "-m", spec.commitMessage]);
 

@@ -79,6 +79,7 @@ See `eval-results/advanced-harness-check/summary.md`.
 |---|---|---|---|
 | Baseline | One prompt, diff plus claims, no tools: the way review works today | TODO-KEY | Established the starting point |
 | Harness | Deterministic executor + ground truth corpus + mock agent first, so model quality is the only moving part | `eval-results/advanced-harness-check/` (53.6 percent, VERIFIED bias) | Kept: plumbing proven before spending a token |
+| Trail audit | Rendered the full evidence trail on the report page and spotted a contradiction: case 13's trail showed a ReferenceError while ground truth said tests pass. Root cause: case repos without a local package.json inherited the project's `"type": "module"` when run in place, so CommonJS `require` exploded (the /tmp sandbox had masked it) | `# pass 0, fail 2` in place vs `pass 3, fail 0` sandboxed, same files | Fixed: builder pins `"type": "commonjs"` into every case repo; in-place and sandboxed runs now agree. The trail catching its own corpus's bug is the product working |
 | Iteration 1 | TODO-KEY | TODO-KEY | TODO-KEY |
 | Iteration 2 | TODO-KEY | TODO-KEY | TODO-KEY |
 | Iteration 3 | TODO-KEY | TODO-KEY | TODO-KEY |

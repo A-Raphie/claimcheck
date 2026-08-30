@@ -1,4 +1,4 @@
-import type { ClaimResult, RunReport, Verdict } from "./types.js";
+import type { ClaimResult, EvidenceAction, EvidenceItem, RunReport, Verdict } from "./types.js";
 
 // Mirror: winsznx/metrx /proof (metrx.pages.dev/proof), SEEN Aug 30 2026. Warm paper,
 // white hairline cards, uppercase mono micro-labels, big stat numerals, tri-state
@@ -100,7 +100,7 @@ export function renderHtmlReport(report: RunReport): string {
     text-transform: uppercase; margin-bottom: 12px;
   }
   .stat .n {
-    font: 400 34px/1 var(--sans); letter-spacing: -0.01em;
+    font: 600 44px/1 var(--sans); letter-spacing: -0.02em;
     font-variant-numeric: tabular-nums;
   }
   .stat .u { font: 400 12px/1.5 var(--mono); color: var(--ink-2); margin-top: 10px; }
@@ -155,6 +155,44 @@ export function renderHtmlReport(report: RunReport): string {
     border-radius: 6px; padding: 2px 6px;
   }
 
+  .dist { display: flex; height: 6px; border-radius: 999px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); margin-top: 14px; }
+  .dist .seg { height: 100%; }
+  .dist .seg.ok { background: var(--ok); }
+  .dist .seg.bad { background: #9c3b24; }
+  .dist .seg.warn { background: #d7a04a; }
+
+  details.trail { margin-top: 14px; }
+  details.trail summary {
+    list-style: none; cursor: pointer; user-select: none;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    font: 500 12px/1 var(--mono); color: var(--ink-2);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 14px; width: fit-content;
+    transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
+  }
+  details.trail summary::-webkit-details-marker { display: none; }
+  details.trail summary:hover { background: var(--paper); border-color: var(--line-strong); }
+  details.trail summary .chev { transition: transform 0.15s ease-out; color: var(--ink-3); }
+  details.trail[open] summary .chev { transform: rotate(90deg); }
+  details.trail summary b { color: var(--ink); font-weight: 500; }
+  .trail-body { margin-top: 10px; display: grid; gap: 10px; }
+  .ev { border: 1px solid var(--line); border-radius: var(--r-inner); background: var(--paper); }
+  .ev-head {
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    font: 500 11px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 9px 12px; color: var(--ink-3);
+  }
+  .ev-head .act { color: var(--ink); }
+  .ev-head .state-ok { color: #0b6e50; }
+  .ev-head .state-fail { color: #9c3b24; }
+  .ev pre {
+    margin: 0; padding: 10px 12px; border-top: 1px solid var(--line);
+    font: 400 12px/1.65 var(--mono); color: var(--ink-2);
+    white-space: pre-wrap; word-break: break-word;
+    max-height: 260px; overflow-y: auto;
+  }
+  .ev-none { font: 400 13px/1.6 var(--mono); color: var(--ink-3); margin: 14px 0 0; }
+
   .ledger {
     background: var(--surface); border: 1px solid var(--line);
     border-radius: var(--r-card); padding: 22px 24px; margin-top: 46px;
@@ -196,6 +234,12 @@ export function renderHtmlReport(report: RunReport): string {
     <div class="stat"><div class="l">Model cost</div><div class="n">$${report.usage.costUsd.toFixed(5)}</div><div class="u">${report.usage.calls} model calls</div></div>
   </div>
 
+  <div class="dist" role="img" aria-label="${counts.VERIFIED} verified, ${counts.REFUTED} refuted, ${counts.UNVERIFIABLE} unverifiable">
+    <div class="seg ok" style="width: ${pct(counts.VERIFIED, counts.total)}%"></div>
+    <div class="seg bad" style="width: ${pct(counts.REFUTED, counts.total)}%"></div>
+    <div class="seg warn" style="width: ${pct(counts.UNVERIFIABLE, counts.total)}%"></div>
+  </div>
+
   <h2 class="seclabel">All claims</h2>
   <main class="cards">
 ${claimsBody}
@@ -218,7 +262,16 @@ ${claimsBody}
 
 function card(c: ClaimResult): string {
   const v = VERDICT[c.verdict] ?? VERDICT.UNVERIFIABLE;
-  return `    <article class="card ${c.verdict}">
+  const ok = c.evidence.filter((e) => e.ok).length;
+  const trail = c.evidence.length
+    ? `      <details class="trail">
+        <summary><span class="chev">▸</span>Full evidence trail <b>${c.evidence.length} action${c.evidence.length === 1 ? "" : "s"}</b> · ${ok} succeeded</summary>
+        <div class="trail-body">
+${c.evidence.map(evBlock).join("\n")}
+        </div>
+      </details>`
+    : `      <p class="ev-none">No evidence actions were run for this claim, so the verdict above rests on the citation alone.</p>`;
+  return `    <article class="card ${c.verdict}" id="${escapeHtml(c.id)}">
       <div class="card-head">
         <span class="cid">${escapeHtml(c.id)}</span>
         <span class="verdict" style="color: ${v.text}; background: ${v.soft}"><span class="dot" style="background: ${v.dot}"></span>${c.verdict}</span>
@@ -227,7 +280,36 @@ function card(c: ClaimResult): string {
       <div class="lbl">Evidence</div>
       <code class="path">${escapeHtml(c.citation)}</code>
       <p class="rationale">${escapeHtml(c.rationale)}</p>
+${trail}
     </article>`;
+}
+
+function evBlock(e: EvidenceItem): string {
+  const action = describeAction(e.action);
+  const state = e.ok
+    ? `<span class="state-ok">ok</span>`
+    : `<span class="state-fail">failed</span>`;
+  return `        <div class="ev">
+          <div class="ev-head"><span class="act">${escapeHtml(action)}</span><span>${state}</span><span>${e.durationMs}ms</span></div>
+          <pre>${escapeHtml(e.output.trim() || "(empty output)")}</pre>
+        </div>`;
+}
+
+function describeAction(a: EvidenceAction): string {
+  switch (a.action) {
+    case "read_file": return `read_file ${a.path}`;
+    case "search": return `search ${JSON.stringify(a.pattern)}`;
+    case "run_tests": return a.filter ? `run_tests ${a.filter}` : "run_tests";
+    case "list_tests": return "list_tests";
+    case "git_log": return "git_log";
+    case "git_diff": return "git_diff";
+    case "run_script": return `run_script ${a.script}`;
+    default: return String((a as EvidenceAction).action);
+  }
+}
+
+function pct(part: number, total: number): number {
+  return total ? Math.round((part / total) * 100) : 0;
 }
 
 function countVerdicts(claims: ClaimResult[]): Record<Verdict | "total", number> {
