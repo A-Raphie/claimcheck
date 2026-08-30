@@ -1,13 +1,15 @@
 import type { UsageSummary } from "./types.js";
 
 const DEFAULT_BASE_URL = "https://api.openai.com/v1";
-const DEFAULT_MODEL = "gpt-4o-mini";
+const DEFAULT_MODEL = "openai/gpt-oss-120b";
 
 // Rough public list prices per 1M tokens; override with CLAIMCHECK_PRICE_IN/OUT.
 const PRICES: Record<string, [number, number]> = {
   "gpt-4o-mini": [0.15, 0.6],
   "gpt-4o": [2.5, 10],
   "gpt-4.1-mini": [0.4, 1.6],
+  "openai/gpt-oss-120b": [0.15, 0.6],
+  "openai/gpt-oss-20b": [0.075, 0.3],
   "llama-3.3-70b-versatile": [0.59, 0.79],
   "llama-3.1-8b-instant": [0.05, 0.08],
 };
@@ -48,7 +50,7 @@ export class Agent {
         "CLAIMCHECK_API_KEY is not set. Claimcheck needs any OpenAI-compatible key. " +
           "Set CLAIMCHECK_BASE_URL and CLAIMCHECK_MODEL if you do not use OpenAI. " +
           "Free tiers such as Groq or OpenRouter work: create a key, then run " +
-          "CLAIMCHECK_BASE_URL=https://api.groq.com/openai/v1 CLAIMCHECK_MODEL=llama-3.3-70b-versatile CLAIMCHECK_API_KEY=... <command>"
+          "CLAIMCHECK_BASE_URL=https://api.groq.com/openai/v1 CLAIMCHECK_MODEL=openai/gpt-oss-120b CLAIMCHECK_API_KEY=... <command>"
       );
     }
   }

@@ -179,7 +179,7 @@ function usage(): void {
 Environment:
   CLAIMCHECK_API_KEY    required: any OpenAI-compatible API key
   CLAIMCHECK_BASE_URL   default https://api.openai.com/v1 (Groq: https://api.groq.com/openai/v1)
-  CLAIMCHECK_MODEL      default gpt-4o-mini (Groq example: llama-3.3-70b-versatile)
+  CLAIMCHECK_MODEL      default openai/gpt-oss-120b (Groq developer plan)
 
 Commands:
   verify --repo <path> --claims "<line per claim>" [--claims-file file.json]

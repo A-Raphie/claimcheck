@@ -52,7 +52,7 @@ Create `.env` in the repository root (it is gitignored):
 CLAIMCHECK_API_KEY=your-key
 # only if not using OpenAI:
 # CLAIMCHECK_BASE_URL=https://api.groq.com/openai/v1
-# CLAIMCHECK_MODEL=llama-3.3-70b-versatile
+# CLAIMCHECK_MODEL=openai/gpt-oss-120b
 ```
 
 ```bash
