@@ -7,3 +7,5 @@ tmp/
 .DS_Store
 .env
 .env.*
+eval/cases/*/repo/
+eval/cases/*/case.json
