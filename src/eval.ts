@@ -79,6 +79,9 @@ export async function runEval(agent: Agent, opts: EvalOptions): Promise<void> {
   }
 
   const summary = summarize(scores);
+  summary.label = opts.label;
+  summary.mode = opts.mode;
+  summary.model = agent.model;
   await writeFile(join(opts.outDir, "summary.json"), JSON.stringify(summary, null, 2));
   await writeFile(join(opts.outDir, "summary.md"), renderMarkdown(summary, opts.label, agent.model));
   console.log(renderMarkdown(summary, opts.label, agent.model));

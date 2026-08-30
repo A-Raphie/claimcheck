@@ -1,6 +1,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import { Agent } from "./agent.js";
+import { MockAgent } from "./internal/mock-agent.js";
 import { runBaseline } from "./baseline.js";
 import { runAdvanced } from "./engine/pipeline.js";
 import { runEval } from "./eval.js";
@@ -17,7 +18,7 @@ async function main(): Promise<void> {
   switch (command) {
     case "verify": {
       const repoPath = requireString(args, "repo");
-      const agent = new Agent();
+      const agent = makeAgent();
       const claims = await loadClaims(args);
       const diff = args.values.diffFile
         ? await readFile(String(args.values.diffFile), "utf8")
@@ -38,7 +39,7 @@ async function main(): Promise<void> {
       break;
     }
     case "eval": {
-      const agent = new Agent();
+      const agent = makeAgent();
       const mode = (args.values.mode as "baseline" | "advanced") ?? "advanced";
       const label = requireString(args, "label");
       const casesRoot = (args.values.cases as string) ?? "eval/cases";
@@ -162,6 +163,13 @@ Commands:
          [--diff-file d.diff] [--mode baseline|advanced] [--out dir]
   eval --label <name> --mode baseline|advanced [--cases eval/cases] [--only id1,id2] [--out eval-results]
   report --artifacts <report.json> [--out report.html]`);
+}
+
+function makeAgent(): Agent {
+  if (process.env.CLAIMCHECK_MOCK === "1") {
+    return new MockAgent();
+  }
+  return new Agent();
 }
 
 /** Minimal .env loader: KEY=VALUE lines only; never overrides real env. */
