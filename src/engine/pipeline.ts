@@ -17,6 +17,16 @@ export async function runAdvanced(
       files,
       claims: input.claims,
     });
+    // Guardrail (added after the gptoss run showed behavioral claims planned
+    // without a suite run, forcing correct-but-useless UNVERIFIABLEs): any
+    // claim asserting behavior or test status always gets run_tests.
+    const BEHAVIORAL = /\b(pass|tests?\b|behavior|handles?|works?|covers?|exercis)/i;
+    for (const plan of plans) {
+      const claim = input.claims.find((c) => c.id === plan.id);
+      if (!claim || !BEHAVIORAL.test(claim.text)) continue;
+      const has = plan.actions.some((a) => a.action === "run_tests");
+      if (!has) plan.actions.unshift({ action: "run_tests" });
+    }
 
     // Execute every plan's actions, then verify claims. Verification calls run
     // sequentially for deterministic, rate-limit-friendly behavior.

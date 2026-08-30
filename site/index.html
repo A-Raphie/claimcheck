@@ -338,14 +338,14 @@ UNVERIFIABLE · "2x faster": add a benchmark</code>
         <span class="verdict" style="color: var(--ok-text); background: rgba(20,199,154,0.14)"><span class="dot" style="background: var(--ok)"></span>VERIFIED</span>
         <span class="claim">All tests pass after this change.</span>
       </div>
-      <code class="path">run_tests -&gt; node --test users.test.js cache.test.js -&gt; &quot;# pass 3 / # fail 0&quot;</code>
+      <code class="path">EVIDENCE 1 (run_tests): all 3 tests passed, 0 failures</code>
     </div>
     <div class="mini bad">
       <div class="head">
         <span class="verdict" style="color: var(--bad-text); background: rgba(156,59,36,0.10)"><span class="dot" style="background: #9c3b24"></span>REFUTED</span>
         <span class="claim">The cache eviction behavior is covered by tests.</span>
       </div>
-      <code class="path">cache.test.js:5-9 → createCache() called without maxEntries; no assertion on size() after 100+ sets</code>
+      <code class="path">cache.test.js:1-9 shows only a set/get test, no eviction scenario exercised</code>
     </div>
   </div>
   <a class="minilink" href="report.html">Open the full report with evidence trails →</a>

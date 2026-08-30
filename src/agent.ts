@@ -73,6 +73,19 @@ export class Agent {
         ],
       }),
     });
+    if (res.status === 429 && attempt < 6) {
+      const body = await res.text().catch(() => "");
+      let waitMs = 15_000;
+      const m = body.match(/try again in ([\d.]+)s/i);
+      if (m) waitMs = Math.ceil(parseFloat(m[1]) * 1000) + 1_000;
+      else {
+        const ra = res.headers.get("retry-after");
+        if (ra) waitMs = Math.ceil(parseFloat(ra) * 1000) + 1_000;
+      }
+      console.error(`  429 on ${call.label}: pacing ${Math.round(waitMs / 1000)}s (attempt ${attempt + 1}/6)`);
+      await new Promise((r) => setTimeout(r, waitMs));
+      return this.chat(call, attempt + 1);
+    }
     if (!res.ok) {
       const body = await res.text().catch(() => "");
       throw new AgentError(`model call ${call.label} failed: HTTP ${res.status} ${body.slice(0, 300)}`);

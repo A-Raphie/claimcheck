@@ -2,7 +2,7 @@
 
 Written for a judge starting from a clean environment. Every command below was run on
 macOS (darwin, arm64) with Node 22.23.1 and npm 10.9.8; any Node 20+ should behave the
-same. Total runtime without an API key: about 1 minute. With a key: TODO-KEY.
+same. Total runtime without an API key: about 1 minute. With a key (Groq free tier, 8K tokens/min with pacing): a full 14-case run takes 6 to 20 minutes wall time, most of it waiting out rate limits.
 
 ## What you need
 
@@ -61,8 +61,8 @@ node dist/cli.js eval --label final --mode advanced       # agent pipeline
 ```
 
 Each run writes per-case reports and a `summary.md` to `eval-results/<mode>-<label>/`.
-Expected numbers: TODO-KEY (fills after final runs; see README evaluation table).
-Approximate cost per full 13-case run: TODO-KEY.
+Expected numbers (gpt-oss-120b): baseline 87.5% verdict accuracy; agent 90.6% with both hard cases at 100%. Per-class tables in each run's summary.md.
+Approximate cost per full 14-case run: baseline $0.037, agent $0.094.
 
 Recorded artifacts from the runs reported in the README are committed under
 `eval-results/` so results can be inspected without re-running.
@@ -89,4 +89,4 @@ any browser for the report view.
 
 - Node 22.23.1, npm 10.9.8, TypeScript 5.6, git 2.x
 - No runtime dependencies; two dev dependencies (typescript, @types/node)
-- Model used for reported results: TODO-KEY
+- Model used for reported results: openai/gpt-oss-120b via Groq (free developer plan)

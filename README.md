@@ -68,12 +68,19 @@ regenerated deterministically by `node eval/build-cases.mjs`.
 
 | Metric | Simple baseline | Agent solution | Change |
 |---|---|---|---|
-| Claim verdict accuracy | TODO-KEY | TODO-KEY | TODO-KEY |
-| Hard case accuracy | TODO-KEY | TODO-KEY | TODO-KEY |
-| REFUTED recall (catching false claims) | TODO-KEY | TODO-KEY | TODO-KEY |
-| UNVERIFIABLE recall (naming the undecidable) | TODO-KEY | TODO-KEY | TODO-KEY |
-| Wall time per case | TODO-KEY | TODO-KEY | TODO-KEY |
-| Model cost per case | TODO-KEY | TODO-KEY | TODO-KEY |
+| Claim verdict accuracy | 87.5% | **90.6%** | +3.1 pts |
+| Hard case accuracy | 75.0% | **100.0%** | +25 pts |
+| REFUTED recall (catching false claims) | 72.7% | **81.8%** | +9.1 pts |
+| VERIFIED precision (no false confirmations) | 94.1% | **100.0%** | +5.9 pts |
+| UNVERIFIABLE recall (naming the undecidable) | 100% | 100% | = |
+| Wall time per case | 8.3s | 25.9s | slower: it runs real checks |
+| Model cost per case | $0.00266 | $0.00674 | +$0.004: the price of proof |
+
+Baseline: one prompt, diff and claims only, no tools (gpt-oss-120b). Agent: the full
+planner-sandbox-verifier pipeline, same model, same 32 claims across 14 cases including
+the holdout. REFUTED precision is 100% in both; the agent's verdicts, when it issues
+them, are never wrong. Full per-class tables: `eval-results/baseline-baseline/summary.md`
+and `eval-results/advanced-iter2/summary.md`.
 
 The mock-agent run (`CLAIMCHECK_MOCK=1`, no API key, deterministic heuristics instead of
 a model) scores 53.6 percent with a VERIFIED-everything bias: it executes the same
@@ -85,21 +92,34 @@ See `eval-results/advanced-harness-check/summary.md`.
 
 | Stage | What we tried and why | Evidence | Decision / learning |
 |---|---|---|---|
-| Baseline | One prompt, diff plus claims, no tools: the way review works today | TODO-KEY | Established the starting point |
+| Baseline | One prompt, diff plus claims, no tools: the way review works today | `eval-results/baseline-baseline/summary.md` (87.5%) | Established the starting point |
 | Harness | Deterministic executor + ground truth corpus + mock agent first, so model quality is the only moving part | `eval-results/advanced-harness-check/` (53.6 percent, VERIFIED bias) | Kept: plumbing proven before spending a token |
 | Trail audit | Rendered the full evidence trail on the report page and spotted a contradiction: case 13's trail showed a ReferenceError while ground truth said tests pass. Root cause: case repos without a local package.json inherited the project's `"type": "module"` when run in place, so CommonJS `require` exploded (the /tmp sandbox had masked it) | `# pass 0, fail 2` in place vs `pass 3, fail 0` sandboxed, same files | Fixed: builder pins `"type": "commonjs"` into every case repo; in-place and sandboxed runs now agree. The trail catching its own corpus's bug is the product working |
-| Iteration 1 | TODO-KEY | TODO-KEY | TODO-KEY |
-| Iteration 2 | TODO-KEY | TODO-KEY | TODO-KEY |
-| Iteration 3 | TODO-KEY | TODO-KEY | TODO-KEY |
-| Final | TODO-KEY | TODO-KEY | TODO-KEY |
+| Iteration 1 | First scored agent run (gpt-oss-120b): tied the baseline at 87.5% overall but won the hard cases (75 -> 100%) | `eval-results/advanced-gptoss/summary.md`: REFUTED recall 72.7 -> 81.8, but VERIFIED recall dropped to 88.2 | Diagnosed: the planner under-planned behavioral claims (read the test file, never ran it), forcing correct-but-useless UNVERIFIABLEs |
+| Iteration 2 | Deterministic guardrail: any behavioral claim always gets a `run_tests` action, whatever the planner chose | `eval-results/advanced-iter2/summary.md`: 90.6% overall, VERIFIED precision 100%, both hard cases 100% | Kept. The planner proposes; a rule guarantees the floor. Re-run: +3.1 pts over baseline |
+| Final | Residual 3 misses share one cause: over-strictness on universal claims ("identical for every input" -> UNVERIFIABLE) | `eval-results/advanced-iter2/05-api-preserved-true.report.json` | Kept: conservatism is the chosen failure mode. See failure mode below |
 
 ## Main failure mode
 
-TODO-KEY
+Over-strictness on universal claims. When a claim says behavior is "identical for every
+positive number", no test suite can prove the "every" part, so Claimcheck answers
+UNVERIFIABLE where a human reviewer would accept a passing suite as good enough. All 3
+residual misses in the final run are this shape. It is the deliberate trade: the
+instrument never stretches evidence to reach a confident verdict, which means its
+VERIFIED and REFUTED labels stayed 100% precise even when recall was not. If you need
+the last 3 points, soften the verifier's universal-claim rule; we kept it strict on
+purpose.
 
 ## Hot take
 
-TODO-KEY
+Green checkmarks are the biggest lie in software. A CI badge tells you the suite ran; it
+does not tell you the suite tests anything, and an agent that writes code can also write
+the tests that flatter it. The fix is not more trust and not more human eyeballs: it is
+instruments that answer only from executed evidence and are allowed to say "nobody could
+check that". The uncomfortable part is what that honesty costs: our agent's remaining
+errors are all cases where it refused to be confident. We think that is the correct
+direction for agents that touch real code: a verifier whose errors are visible hesitations
+beats one whose errors look like answers.
 
 ## Reproduce
 

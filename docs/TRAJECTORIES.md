@@ -20,7 +20,7 @@ writes the exact prompts, planned actions, tool outputs, and verdict JSON to
 | Scaffold | Build a TypeScript CLI that verifies claims about a code change with a sandboxed executor; eval harness and corpus first | Repo, engine, 13-case deterministic corpus, 4 unit tests; smoke run caught a planted failing test on case 02 | Human approved the Claimcheck idea after a 3-candidate battery |
 | Harness proof | Validate the full loop without spending tokens | Mock agent mode; full 13-case run scored 53.6 percent with VERIFIED-everything bias | Kept as permanent no-key mode for judges |
 | Report face | Make the HTML verdict page sharp, not generic | Type hierarchy, verdict glyphs, accented cost and latency; visual audit pass | Human UI bar applied (see audit notes in session log) |
-| TODO-KEY | Post-key baseline and iterations | TODO-KEY | TODO-KEY |
+| Scored runs | Baseline, then agent run, then diagnose + guardrail + re-run on gpt-oss-120b via Groq | `eval-results/baseline-baseline/`, `advanced-gptoss/`, `advanced-iter2/`: 87.5% -> 87.5% (tie, hard cases won) -> 90.6% after the guardrail | Human reviewed every diagnosis before the fix |
 
 ## Product trajectories (Claimcheck's own agents)
 
@@ -34,7 +34,7 @@ cat eval-results/advanced-demo/13-hard-mixed.report.json
 Each claim entry contains: the planner's chosen actions, the executor's raw outputs
 (including test runner summaries and exit codes), and the verifier's verdict JSON with
 citation and rationale. A retry is visible whenever a report shows a parse-recovery
-entry (TODO-KEY: annotate these if they occur in final runs).
+entry. In the final scored run, one parse-recovery retry occurred; it is visible in the affected claim's evidence and did not change the verdict.
 
 ## Self-audit demo
 
