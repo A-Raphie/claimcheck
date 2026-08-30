@@ -3,31 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Claimcheck · 5 claims checked</title>
+<title>Claimcheck report · run 3D6EC</title>
 <meta name="description" content="Every claim about this code change was checked against executed evidence. 2 verified. 2 refuted. 1 undecidable. Nothing is asserted above the evidence behind it.">
 <meta name="theme-color" content="#f7f1e8">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Claimcheck · 5 claims checked">
+<meta property="og:title" content="Claimcheck report · run 3D6EC">
 <meta property="og:description" content="Every claim about this code change was checked against executed evidence. 2 verified. 2 refuted. 1 undecidable. Nothing is asserted above the evidence behind it.">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23141311'/%3E%3Cpath d='M9 16.5l5 5 9-11' stroke='%2314c79a' stroke-width='3.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
-  /* Token block: the only place raw colors live. Values from metrx.pages.dev
-     production CSS (Aug 30 2026). stone-strong darkened from metrx stone #8a8178
-     for the 4.5:1 small-text floor on white. */
   :root {
-    --paper: #f7f1e8;      /* warm canvas */
-    --surface: #fffdf9;    /* white-warm card */
+    --paper: #f7f1e8;
+    --surface: #fffdf9;
     --line: rgba(20, 19, 17, 0.10);
     --line-strong: rgba(20, 19, 17, 0.22);
-    --ink: #141311;        /* near-black warm */
-    --ink-2: #4b5563;      /* slate body */
-    --ink-3: #6f675e;      /* stone-strong: labels, 5.2:1 on white */
+    --ink: #141311;
+    --ink-2: #4b5563;
+    --ink-3: #6f675e;
     --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --r-card: 16px;
-    --r-inner: 4px;        /* playbook: nested radii <= outer minus inset, floored */
+    --r-inner: 4px;
     --ok: #14c79a;
+    --ok-text: #0b6e50;
+    --bad-text: #9c3b24;
   }
   * { box-sizing: border-box; }
   body {
@@ -38,14 +37,18 @@
   .shell { max-width: 1120px; margin: 0 auto; padding: 0 24px 72px; }
 
   .topbar {
-    display: flex; align-items: baseline; justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     flex-wrap: wrap; gap: 6px 16px;
     padding: 20px 0; border-bottom: 1px solid var(--line);
   }
-  .wordmark { font: 600 16px/1 var(--sans); letter-spacing: 0.01em; }
+  .wordmark { font: 600 16px/1 var(--sans); }
   .wordmark .tick { color: var(--ok); }
   .runmeta { font: 400 12px/1 var(--mono); color: var(--ink-2); }
 
+  .herozone {
+    background-image: repeating-linear-gradient(135deg, rgba(20,19,17,0.028) 0 1px, transparent 1px 9px);
+    margin: 0 -24px; padding: 0 24px 26px;
+  }
   .eyebrow {
     font: 500 11px/1 var(--mono); letter-spacing: 0.18em; color: var(--ink-3);
     text-transform: uppercase; margin: 52px 0 14px;
@@ -55,8 +58,48 @@
     margin: 0 0 18px; max-width: 21ch;
     text-wrap: balance;
   }
-  .sub { max-width: 62ch; color: var(--ink-2); margin: 0 0 36px; }
+  .sub { max-width: 62ch; color: var(--ink-2); margin: 0 0 26px; }
   .sub b { color: var(--ink); font-weight: 500; }
+  .receipt {
+    display: flex; gap: 8px 18px; flex-wrap: wrap; align-items: baseline;
+    font: 400 11px/1.6 var(--mono); letter-spacing: 0.08em; color: var(--ink-3);
+    border: 1px solid var(--line); border-radius: var(--r-inner);
+    background: var(--surface); padding: 9px 14px;
+  }
+  .receipt b { color: var(--ink); font-weight: 500; }
+
+  .seclabel {
+    font: 500 11px/1 var(--mono); letter-spacing: 0.18em; color: var(--ink-3);
+    text-transform: uppercase; margin: 46px 0 16px;
+  }
+  .diffbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .filechip {
+    display: inline-flex; align-items: center; gap: 8px;
+    font: 400 12px/1 var(--mono); color: var(--ink);
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 999px; padding: 7px 12px;
+  }
+  .filechip .adds { color: var(--ok-text); }
+  .filechip .dels { color: var(--bad-text); }
+  details.diffbar > summary {
+    list-style: none; cursor: pointer; user-select: none;
+    font: 500 12px/1 var(--mono); color: var(--ink-2);
+    border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px;
+    transition: background-color 0.15s ease-out;
+  }
+  details.diffbar > summary::-webkit-details-marker { display: none; }
+  details.diffbar > summary:hover { background: var(--surface); border-color: var(--line-strong); }
+  .diffbody {
+    margin-top: 10px; border: 1px solid var(--line); border-radius: var(--r-card);
+    background: var(--surface); padding: 14px 16px; overflow-x: auto;
+  }
+  .diffbody pre {
+    margin: 0; font: 400 12px/1.7 var(--mono); color: var(--ink-2);
+    white-space: pre; max-height: 340px; overflow-y: auto;
+  }
+  .diffbody .add { color: var(--ok-text); background: rgba(20,199,154,0.08); display: inline-block; width: 100%; }
+  .diffbody .del { color: var(--bad-text); background: rgba(156,59,36,0.07); display: inline-block; width: 100%; }
+  .diffbody .hunk { color: var(--ink-3); }
 
   .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
   .stat {
@@ -73,10 +116,12 @@
   }
   .stat .u { font: 400 12px/1.5 var(--mono); color: var(--ink-2); margin-top: 10px; }
 
-  .seclabel {
-    font: 500 11px/1 var(--mono); letter-spacing: 0.18em; color: var(--ink-3);
-    text-transform: uppercase; margin: 46px 0 16px;
-  }
+  .dist { display: flex; height: 6px; border-radius: 999px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); margin-top: 14px; }
+  .dist .seg { height: 100%; }
+  .dist .seg.ok { background: var(--ok); }
+  .dist .seg.bad { background: #9c3b24; }
+  .dist .seg.warn { background: #d7a04a; }
+
   .cards { display: grid; gap: 12px; }
   .card {
     background: var(--surface); border: 1px solid var(--line);
@@ -93,8 +138,11 @@
   @media (prefers-reduced-motion: reduce) {
     .card { animation: none; }
   }
+  .card.VERIFIED { border-left: 3px solid var(--ok); }
+  .card.REFUTED { border-left: 3px solid #9c3b24; background: linear-gradient(0deg, rgba(156,59,36,0.05), rgba(156,59,36,0.05)), var(--surface); }
+  .card.UNVERIFIABLE { border: 1px dashed rgba(215,160,74,0.55); border-left: 3px solid #d7a04a; }
   .card-head { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
-  .cid { font: 400 12px/1 var(--mono); color: var(--ink-3); }
+  .cid { font: 500 12px/1 var(--mono); color: var(--ink-3); letter-spacing: 0.06em; }
   .verdict {
     display: inline-flex; align-items: center; gap: 7px;
     font: 500 11px/1 var(--mono); letter-spacing: 0.12em;
@@ -113,6 +161,7 @@
     padding: 10px 14px; white-space: pre-wrap; word-break: break-word;
     overflow-x: auto;
   }
+  .path b { color: var(--ink); font-weight: 600; }
   .card.REFUTED .path { border-left-color: #9c3b24; }
   .card.VERIFIED .path { border-left-color: var(--ok); }
   .card.UNVERIFIABLE .path { border-left-color: #d7a04a; }
@@ -122,12 +171,6 @@
     background: var(--paper); border: 1px solid var(--line);
     border-radius: 6px; padding: 2px 6px;
   }
-
-  .dist { display: flex; height: 6px; border-radius: 999px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); margin-top: 14px; }
-  .dist .seg { height: 100%; }
-  .dist .seg.ok { background: var(--ok); }
-  .dist .seg.bad { background: #9c3b24; }
-  .dist .seg.warn { background: #d7a04a; }
 
   details.trail { margin-top: 14px; }
   details.trail summary {
@@ -151,8 +194,8 @@
     padding: 9px 12px; color: var(--ink-3);
   }
   .ev-head .act { color: var(--ink); }
-  .ev-head .state-ok { color: #0b6e50; }
-  .ev-head .state-fail { color: #9c3b24; }
+  .ev-head .state-ok { color: var(--ok-text); }
+  .ev-head .state-fail { color: var(--bad-text); }
   .ev pre {
     margin: 0; padding: 10px 12px; border-top: 1px solid var(--line);
     font: 400 12px/1.65 var(--mono); color: var(--ink-2);
@@ -174,11 +217,11 @@
   }
 
   @media (max-width: 720px) {
-    .topbar { flex-direction: column; align-items: flex-start; }
     h1 { font-size: 32px; }
     .stats { grid-template-columns: repeat(2, 1fr); }
     .shell { padding: 0 16px 56px; }
     .card { padding: 16px; }
+    .herozone { margin: 0 -16px; padding: 0 16px 22px; }
   }
 </style>
 </head>
@@ -186,14 +229,118 @@
 <div class="shell">
   <header class="topbar">
     <div class="wordmark"><span class="tick" aria-hidden="true">✓</span> Claimcheck</div>
-    <div class="runmeta">llama-3.3-70b-versatile · advanced run · 2026-08-30</div>
+    <div class="runmeta">advanced run · 2026-08-30</div>
   </header>
 
-  <div class="eyebrow" id="main">Proof report</div>
-  <h1>2 verified. 2 refuted. 1 undecidable.</h1>
-  <p class="sub">Every claim about this code change was checked against <b>executed evidence</b>:
-  files read, searches run, and test suites executed inside the repository itself.
-  Nothing below is asserted above the evidence behind it.</p>
+  <div class="herozone">
+    <div class="eyebrow" id="main">Proof report</div>
+    <h1>2 verified. 2 refuted. 1 undecidable.</h1>
+    <p class="sub">Every claim about this code change was checked against <b>executed evidence</b>:
+    files read, searches run, and test suites executed inside the repository itself.
+    Nothing below is asserted above the evidence behind it.</p>
+    <div class="receipt">
+      <span>RUN <b>3D6EC</b></span>
+      <span>MODEL <b>llama-3.3-70b-versatile</b></span>
+      <span>TOOL CALLS <b>9</b></span>
+      <span>WALL <b>18.4s</b></span>
+      <span>2026-08-30</span>
+    </div>
+  </div>
+
+  <div class="seclabel">The change under review</div>
+  <details class="diffbar">
+    <summary>Read the full diff (4 files, +40 −3)</summary>
+    <div class="diffbody"><pre>diff --git a/cache.js b/cache.js
+index 2b00351..3a77e32 100644
+--- a/cache.js
++++ b/cache.js
+<span class="hunk">@@ -1,13 +1,22 @@</span>
+<span class="del">-function createCache() {</span>
+<span class="add">+function createCache(maxEntries = 100) {</span>
+   const store = new Map();
+   return {
+     get(key) {
+       return store.get(key);
+     },
+     set(key, value) {
+<span class="add">+      if (maxEntries &gt; 0 &amp;&amp; store.size &gt;= maxEntries) {</span>
+<span class="add">+        const oldest = store.keys().next().value;</span>
+<span class="add">+        store.delete(oldest);</span>
+<span class="add">+      }</span>
+       store.set(key, value);
+     },
+<span class="add">+    size() {</span>
+<span class="add">+      return store.size;</span>
+<span class="add">+    },</span>
+   };
+ }
+ 
+<span class="del">-module.exports = { createCache };</span>
+<span class="add">+const legacyFetchUser = (id) =&gt; require(&quot;./users.js&quot;).fetchUser(id);</span>
+<span class="add">+</span>
+<span class="add">+module.exports = { createCache, legacyFetchUser };</span>
+diff --git a/cache.test.js b/cache.test.js
+new file mode 100644
+index 0000000..5452028
+--- /dev/null
++++ b/cache.test.js
+<span class="hunk">@@ -0,0 +1,9 @@</span>
+<span class="add">+const test = require(&quot;node:test&quot;);</span>
+<span class="add">+const assert = require(&quot;node:assert&quot;);</span>
+<span class="add">+const { createCache } = require(&quot;./cache.js&quot;);</span>
+<span class="add">+</span>
+<span class="add">+test(&quot;cache stores and returns values&quot;, () =&gt; {</span>
+<span class="add">+  const cache = createCache();</span>
+<span class="add">+  cache.set(&quot;a&quot;, 1);</span>
+<span class="add">+  assert.equal(cache.get(&quot;a&quot;), 1);</span>
+<span class="add">+});</span>
+diff --git a/users.js b/users.js
+index 8c1fcc3..f6779e1 100644
+--- a/users.js
++++ b/users.js
+<span class="hunk">@@ -1,3 +1,10 @@</span>
+<span class="add">+async function loadUser(id) {</span>
+<span class="add">+  return { id, name: &quot;user&quot; + id };</span>
+<span class="add">+}</span>
+<span class="add">+</span>
+<span class="add">+/**</span>
+<span class="add">+ * Deprecated: use loadUser instead. Kept for backwards compatibility.</span>
+<span class="add">+ */</span>
+ function fetchUser(id) {
+   return { id, name: &quot;user&quot; + id };
+ }
+<span class="hunk">@@ -6,4 +13,4 @@ function decorate(user) {</span>
+   return Object.assign({ active: true }, user);
+ }
+ 
+<span class="del">-module.exports = { fetchUser, decorate };</span>
+<span class="add">+module.exports = { loadUser, decorate, fetchUser };</span>
+diff --git a/users.test.js b/users.test.js
+new file mode 100644
+index 0000000..6d61a4e
+--- /dev/null
++++ b/users.test.js
+<span class="hunk">@@ -0,0 +1,12 @@</span>
+<span class="add">+const test = require(&quot;node:test&quot;);</span>
+<span class="add">+const assert = require(&quot;node:assert&quot;);</span>
+<span class="add">+const { loadUser, decorate } = require(&quot;./users.js&quot;);</span>
+<span class="add">+</span>
+<span class="add">+test(&quot;loadUser returns a user object&quot;, async () =&gt; {</span>
+<span class="add">+  const user = await loadUser(7);</span>
+<span class="add">+  assert.equal(user.id, 7);</span>
+<span class="add">+});</span>
+<span class="add">+</span>
+<span class="add">+test(&quot;decorate marks user active&quot;, () =&gt; {</span>
+<span class="add">+  assert.equal(decorate({ id: 1 }).active, true);</span>
+<span class="add">+});</span>
+</pre></div>
+  </details>
+  <div class="diffbar" style="margin: 10px 0 26px">
+    <span class="filechip">cache.js<span class="adds">+11</span><span class="dels">−2</span></span>
+    <span class="filechip">cache.test.js<span class="adds">+9</span><span class="dels">−0</span></span>
+    <span class="filechip">users.js<span class="adds">+8</span><span class="dels">−1</span></span>
+    <span class="filechip">users.test.js<span class="adds">+12</span><span class="dels">−0</span></span>
+  </div>
 
   <div class="stats" role="group" aria-label="Run facts">
     <div class="stat"><div class="l">Claims checked</div><div class="n">5</div><div class="u">3 verdict classes</div></div>
@@ -203,33 +350,33 @@
   </div>
 
   <div class="dist" role="img" aria-label="2 verified, 2 refuted, 1 unverifiable">
-    <div class="seg ok" style="width: 40%"></div>
-    <div class="seg bad" style="width: 40%"></div>
-    <div class="seg warn" style="width: 20%"></div>
+    <div class="seg ok" style="width: 40%" title="2 verified"></div>
+    <div class="seg bad" style="width: 40%" title="2 refuted"></div>
+    <div class="seg warn" style="width: 20%" title="1 unverifiable"></div>
   </div>
 
-  <h2 class="seclabel">All claims</h2>
+  <div class="seclabel">All claims</div>
   <main class="cards">
     <article class="card VERIFIED" id="C1">
       <div class="card-head">
-        <span class="cid">C1</span>
+        <span class="cid">01 · C1</span>
         <span class="verdict" style="color: #0b6e50; background: rgba(20, 199, 154, 0.14)"><span class="dot" style="background: #14c79a"></span>VERIFIED</span>
         <span class="claim">All tests pass after this change.</span>
       </div>
       <div class="lbl">Evidence</div>
-      <code class="path">run_tests -&gt; node --test users.test.js cache.test.js -&gt; &quot;# pass 3 / # fail 0&quot;</code>
+      <code class="path">run_tests -&gt; node --test users.test.js cache.test.js -&gt; &quot;<b># pass 3 / # fail 0</b></code>
       <p class="rationale">The test run in evidence reports 3 passing, 0 failing.</p>
       <details class="trail">
         <summary><span class="chev">▸</span>Full evidence trail <b>3 actions</b> · 3 succeeded</summary>
         <div class="trail-body">
-        <div class="ev">
-          <div class="ev-head"><span class="act">list_tests</span><span><span class="state-ok">ok</span></span><span>0ms</span></div>
-          <pre>cache.test.js
+          <div class="ev">
+            <div class="ev-head"><span class="act">list_tests</span><span><span class="state-ok">ok</span></span><span>0ms</span></div>
+            <pre>cache.test.js
 users.test.js</pre>
-        </div>
-        <div class="ev">
-          <div class="ev-head"><span class="act">run_tests</span><span><span class="state-ok">ok</span></span><span>118ms</span></div>
-          <pre>TAP version 13
+          </div>
+          <div class="ev">
+            <div class="ev-head"><span class="act">run_tests</span><span><span class="state-ok">ok</span></span><span>118ms</span></div>
+            <pre>TAP version 13
 # Subtest: cache stores and returns values
 ok 1 - cache stores and returns values
   ---
@@ -257,10 +404,10 @@ ok 3 - decorate marks user active
 # skipped 0
 # todo 0
 # duration_ms 66.5915</pre>
-        </div>
-        <div class="ev">
-          <div class="ev-head"><span class="act">git_diff</span><span><span class="state-ok">ok</span></span><span>11ms</span></div>
-          <pre>diff --git a/cache.js b/cache.js
+          </div>
+          <div class="ev">
+            <div class="ev-head"><span class="act">git_diff</span><span><span class="state-ok">ok</span></span><span>11ms</span></div>
+            <pre>diff --git a/cache.js b/cache.js
 index 2b00351..3a77e32 100644
 --- a/cache.js
 +++ b/cache.js
@@ -343,13 +490,13 @@ index 0000000..6d61a4e
 +test(&quot;decorate marks user active&quot;, () =&gt; {
 +  assert.equal(decorate({ id: 1 }).active, true);
 +});</pre>
-        </div>
+          </div>
         </div>
       </details>
     </article>
     <article class="card REFUTED" id="C2">
       <div class="card-head">
-        <span class="cid">C2</span>
+        <span class="cid">02 · C2</span>
         <span class="verdict" style="color: #9c3b24; background: rgba(156, 59, 36, 0.10)"><span class="dot" style="background: #9c3b24"></span>REFUTED</span>
         <span class="claim">The cache eviction behavior is covered by tests.</span>
       </div>
@@ -359,14 +506,14 @@ index 0000000..6d61a4e
       <details class="trail">
         <summary><span class="chev">▸</span>Full evidence trail <b>3 actions</b> · 3 succeeded</summary>
         <div class="trail-body">
-        <div class="ev">
-          <div class="ev-head"><span class="act">list_tests</span><span><span class="state-ok">ok</span></span><span>0ms</span></div>
-          <pre>cache.test.js
+          <div class="ev">
+            <div class="ev-head"><span class="act">list_tests</span><span><span class="state-ok">ok</span></span><span>0ms</span></div>
+            <pre>cache.test.js
 users.test.js</pre>
-        </div>
-        <div class="ev">
-          <div class="ev-head"><span class="act">run_tests</span><span><span class="state-ok">ok</span></span><span>113ms</span></div>
-          <pre>TAP version 13
+          </div>
+          <div class="ev">
+            <div class="ev-head"><span class="act">run_tests</span><span><span class="state-ok">ok</span></span><span>113ms</span></div>
+            <pre>TAP version 13
 # Subtest: cache stores and returns values
 ok 1 - cache stores and returns values
   ---
@@ -394,10 +541,10 @@ ok 3 - decorate marks user active
 # skipped 0
 # todo 0
 # duration_ms 68.988583</pre>
-        </div>
-        <div class="ev">
-          <div class="ev-head"><span class="act">git_diff</span><span><span class="state-ok">ok</span></span><span>11ms</span></div>
-          <pre>diff --git a/cache.js b/cache.js
+          </div>
+          <div class="ev">
+            <div class="ev-head"><span class="act">git_diff</span><span><span class="state-ok">ok</span></span><span>11ms</span></div>
+            <pre>diff --git a/cache.js b/cache.js
 index 2b00351..3a77e32 100644
 --- a/cache.js
 +++ b/cache.js
@@ -480,29 +627,29 @@ index 0000000..6d61a4e
 +test(&quot;decorate marks user active&quot;, () =&gt; {
 +  assert.equal(decorate({ id: 1 }).active, true);
 +});</pre>
-        </div>
+          </div>
         </div>
       </details>
     </article>
     <article class="card REFUTED" id="C3">
       <div class="card-head">
-        <span class="cid">C3</span>
+        <span class="cid">03 · C3</span>
         <span class="verdict" style="color: #9c3b24; background: rgba(156, 59, 36, 0.10)"><span class="dot" style="background: #9c3b24"></span>REFUTED</span>
         <span class="claim">This change removes all uses of the deprecated fetchUser function.</span>
       </div>
       <div class="lbl">Evidence</div>
-      <code class="path">search &quot;fetchUser&quot; → users.js:11 (module.exports), cache.js:19 (legacyFetchUser wraps it)</code>
+      <code class="path">search &quot;<b>fetchUser</b> → users.js:11 (module.exports), cache.js:19 (legacyFetchUser wraps it)</code>
       <p class="rationale">fetchUser is still exported from users.js and re-exported through legacyFetchUser in cache.js.</p>
       <details class="trail">
         <summary><span class="chev">▸</span>Full evidence trail <b>2 actions</b> · 2 succeeded</summary>
         <div class="trail-body">
-        <div class="ev">
-          <div class="ev-head"><span class="act">search &quot;change&quot;</span><span><span class="state-ok">ok</span></span><span>1ms</span></div>
-          <pre>(no matches)</pre>
-        </div>
-        <div class="ev">
-          <div class="ev-head"><span class="act">git_diff</span><span><span class="state-ok">ok</span></span><span>10ms</span></div>
-          <pre>diff --git a/cache.js b/cache.js
+          <div class="ev">
+            <div class="ev-head"><span class="act">search &quot;change&quot;</span><span><span class="state-ok">ok</span></span><span>1ms</span></div>
+            <pre>(no matches)</pre>
+          </div>
+          <div class="ev">
+            <div class="ev-head"><span class="act">git_diff</span><span><span class="state-ok">ok</span></span><span>10ms</span></div>
+            <pre>diff --git a/cache.js b/cache.js
 index 2b00351..3a77e32 100644
 --- a/cache.js
 +++ b/cache.js
@@ -585,25 +732,25 @@ index 0000000..6d61a4e
 +test(&quot;decorate marks user active&quot;, () =&gt; {
 +  assert.equal(decorate({ id: 1 }).active, true);
 +});</pre>
-        </div>
+          </div>
         </div>
       </details>
     </article>
     <article class="card UNVERIFIABLE" id="C4">
       <div class="card-head">
-        <span class="cid">C4</span>
+        <span class="cid">04 · C4</span>
         <span class="verdict" style="color: #8a6420; background: rgba(215, 160, 74, 0.16)"><span class="dot" style="background: #d7a04a"></span>UNVERIFIABLE</span>
         <span class="claim">The bounded cache reduces memory usage by 30 percent.</span>
       </div>
       <div class="lbl">Evidence</div>
-      <code class="path">list_files + search &quot;benchmark|memory&quot; → no matches in the repo</code>
+      <code class="path">list_files + search &quot;<b>benchmark|memory</b> → no matches in the repo</code>
       <p class="rationale">No memory measurement or benchmark exists anywhere in the repository; nothing in the evidence can decide a percentage claim.</p>
       <details class="trail">
         <summary><span class="chev">▸</span>Full evidence trail <b>1 action</b> · 1 succeeded</summary>
         <div class="trail-body">
-        <div class="ev">
-          <div class="ev-head"><span class="act">git_diff</span><span><span class="state-ok">ok</span></span><span>10ms</span></div>
-          <pre>diff --git a/cache.js b/cache.js
+          <div class="ev">
+            <div class="ev-head"><span class="act">git_diff</span><span><span class="state-ok">ok</span></span><span>10ms</span></div>
+            <pre>diff --git a/cache.js b/cache.js
 index 2b00351..3a77e32 100644
 --- a/cache.js
 +++ b/cache.js
@@ -686,25 +833,25 @@ index 0000000..6d61a4e
 +test(&quot;decorate marks user active&quot;, () =&gt; {
 +  assert.equal(decorate({ id: 1 }).active, true);
 +});</pre>
-        </div>
+          </div>
         </div>
       </details>
     </article>
     <article class="card VERIFIED" id="C5">
       <div class="card-head">
-        <span class="cid">C5</span>
+        <span class="cid">05 · C5</span>
         <span class="verdict" style="color: #0b6e50; background: rgba(20, 199, 154, 0.14)"><span class="dot" style="background: #14c79a"></span>VERIFIED</span>
         <span class="claim">The repository contains no credentials or private keys.</span>
       </div>
       <div class="lbl">Evidence</div>
-      <code class="path">search &quot;(BEGIN.*KEY|sk-[A-Za-z0-9])&quot; → (no matches)</code>
+      <code class="path">search &quot;<b>(BEGIN.*KEY|sk-[A-Za-z0-9])</b> → (no matches)</code>
       <p class="rationale">A search for key-shaped patterns returns no matches across the seven tracked files.</p>
       <p class="ev-none">No evidence actions were run for this claim, so the verdict above rests on the citation alone.</p>
     </article>
   </main>
 
   <section class="ledger" aria-labelledby="ledger-h">
-    <h2 class="seclabel" id="ledger-h" style="margin: 0 0 12px">Claim ledger</h2>
+    <div class="seclabel" id="ledger-h" style="margin: 0 0 12px">Claim ledger</div>
     <p>Every verdict above cites the evidence that decided it. Nothing on this page is
     asserted above the evidence behind it. Re-check everything by regenerating the report:</p>
     <code>claimcheck verify --repo &lt;path&gt; --claims-file claims.md</code>

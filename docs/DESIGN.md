@@ -51,6 +51,18 @@ micro-labels at 10 to 11px, 0.16 to 0.18em tracking are the section voice.
 5. Metadata: title, description, OG tags, theme-color, favicon on every page
    (fixing-metadata pass).
 
+## Authored layer (v5, the de-generic pass)
+
+- The change under review: the report renders the actual diff (file chips with
+  +adds/minus-dels, expandable tinted hunks). The product's subject was absent from
+  its own report; now it is the first section.
+- Verdict-weighted cards: REFUTED tinted clay with 3px rail, VERIFIED calm green rail,
+  UNVERIFIABLE dashed amber border (hesitant, matching "cannot decide"). Claims carry
+  01/02 numbered indexes.
+- Run receipt: mono serial strip (RUN hash from startedAt+model, model, tool calls,
+  wall, date). Diagonal-stripe canvas texture behind the hero (beautifului move).
+- Decisive-evidence emphasis: quoted fragments inside citations render bold.
+
 ## History
 
 - v1 freehand dark: rejected (no skill anatomy).
