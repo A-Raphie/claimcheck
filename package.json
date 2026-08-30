@@ -1,0 +1,24 @@
+{
+  "name": "claimcheck",
+  "version": "0.1.0",
+  "description": "Verifies claims about a code change against executable evidence",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "claimcheck": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "verify": "node dist/cli.js verify",
+    "eval": "node dist/cli.js eval",
+    "report": "node dist/cli.js report",
+    "test": "node --test \"dist/internal/*.test.js\""
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^22.0.0"
+  }
+}

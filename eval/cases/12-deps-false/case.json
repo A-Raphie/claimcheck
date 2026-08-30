@@ -1,0 +1,25 @@
+{
+  "id": "12-deps-false",
+  "description": "Claim says no new dependencies and single file change, both false",
+  "hard": false,
+  "claims": [
+    {
+      "id": "C1",
+      "text": "No new dependencies were added by this change."
+    },
+    {
+      "id": "C2",
+      "text": "This change only touches one file."
+    }
+  ],
+  "groundTruth": {
+    "C1": {
+      "verdict": "REFUTED",
+      "note": "package.json adds dayjs and dates.js requires it."
+    },
+    "C2": {
+      "verdict": "REFUTED",
+      "note": "diff touches package.json and dates.js."
+    }
+  }
+}

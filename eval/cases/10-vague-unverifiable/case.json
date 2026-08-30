@@ -1,0 +1,25 @@
+{
+  "id": "10-vague-unverifiable",
+  "description": "Subjective quality claims plus one structural claim the diff can decide",
+  "hard": false,
+  "claims": [
+    {
+      "id": "C1",
+      "text": "This change improves the readability of normalizeKey."
+    },
+    {
+      "id": "C2",
+      "text": "normalizeKey is now a single return statement."
+    }
+  ],
+  "groundTruth": {
+    "C1": {
+      "verdict": "UNVERIFIABLE",
+      "note": "readability is subjective; no evidence can decide it."
+    },
+    "C2": {
+      "verdict": "VERIFIED",
+      "note": "diff shows the body collapsed to one return."
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "id": "08-edge-false",
+  "description": "Claim of graceful negative handling but code throws and no test covers it",
+  "hard": false,
+  "claims": [
+    {
+      "id": "C1",
+      "text": "Negative amounts are handled gracefully."
+    },
+    {
+      "id": "C2",
+      "text": "A test exercises negative amounts."
+    }
+  ],
+  "groundTruth": {
+    "C1": {
+      "verdict": "REFUTED",
+      "note": "code throws for amounts <= 0 rather than handling gracefully."
+    },
+    "C2": {
+      "verdict": "REFUTED",
+      "note": "the only test uses a positive amount."
+    }
+  }
+}

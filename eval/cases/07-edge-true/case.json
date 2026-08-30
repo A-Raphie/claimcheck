@@ -1,0 +1,25 @@
+{
+  "id": "07-edge-true",
+  "description": "Zero attempts edge case handled and actually tested",
+  "hard": false,
+  "claims": [
+    {
+      "id": "C1",
+      "text": "retry handles maxAttempts of zero without invoking fn."
+    },
+    {
+      "id": "C2",
+      "text": "A test exercises the zero attempts case."
+    }
+  ],
+  "groundTruth": {
+    "C1": {
+      "verdict": "VERIFIED",
+      "note": "guard returns early with an error callback."
+    },
+    "C2": {
+      "verdict": "VERIFIED",
+      "note": "test passes 0 as attempts and asserts fn was not invoked."
+    }
+  }
+}

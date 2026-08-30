@@ -1,0 +1,25 @@
+{
+  "id": "09-perf-unverifiable",
+  "description": "Performance claim with no benchmark present in the repo",
+  "hard": false,
+  "claims": [
+    {
+      "id": "C1",
+      "text": "This change makes parsing twice as fast."
+    },
+    {
+      "id": "C2",
+      "text": "parseList still returns the same array shape as before."
+    }
+  ],
+  "groundTruth": {
+    "C1": {
+      "verdict": "UNVERIFIABLE",
+      "note": "no benchmark in the repo; nothing measures speed."
+    },
+    "C2": {
+      "verdict": "VERIFIED",
+      "note": "tests assert the array output for the same inputs."
+    }
+  }
+}

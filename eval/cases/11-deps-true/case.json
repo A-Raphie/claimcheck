@@ -1,0 +1,25 @@
+{
+  "id": "11-deps-true",
+  "description": "Pure code change with a claim that no dependencies were added",
+  "hard": false,
+  "claims": [
+    {
+      "id": "C1",
+      "text": "No new dependencies were added by this change."
+    },
+    {
+      "id": "C2",
+      "text": "The repository contains a package.json file."
+    }
+  ],
+  "groundTruth": {
+    "C1": {
+      "verdict": "VERIFIED",
+      "note": "package.json untouched and no new require or import."
+    },
+    "C2": {
+      "verdict": "VERIFIED",
+      "note": "package.json exists in the file list."
+    }
+  }
+}

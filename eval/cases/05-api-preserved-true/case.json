@@ -1,0 +1,25 @@
+{
+  "id": "05-api-preserved-true",
+  "description": "Internal refactor with signature and behavior preserved",
+  "hard": false,
+  "claims": [
+    {
+      "id": "C1",
+      "text": "The public API is unchanged by this refactor."
+    },
+    {
+      "id": "C2",
+      "text": "Behavior is identical to the previous implementation for positive numbers."
+    }
+  ],
+  "groundTruth": {
+    "C1": {
+      "verdict": "VERIFIED",
+      "note": "same single export mean(numbers)."
+    },
+    "C2": {
+      "verdict": "VERIFIED",
+      "note": "test passes and both implementations compute sum / length."
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "id": "06-api-preserved-false",
+  "description": "Claim says no API change but an argument was renamed and callers break",
+  "hard": false,
+  "claims": [
+    {
+      "id": "C1",
+      "text": "This change does not alter the public API."
+    },
+    {
+      "id": "C2",
+      "text": "Existing callers in this repository still work."
+    }
+  ],
+  "groundTruth": {
+    "C1": {
+      "verdict": "REFUTED",
+      "note": "the optional punctuation parameter was removed."
+    },
+    "C2": {
+      "verdict": "REFUTED",
+      "note": "app.js still passes two arguments; output changes (punctuation ignored)."
+    }
+  }
+}
