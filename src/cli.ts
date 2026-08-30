@@ -9,6 +9,7 @@ import { renderHtmlReport } from "./report.js";
 import type { Claim, RunReport } from "./types.js";
 
 async function main(): Promise<void> {
+  await loadDotEnv(".env");
   const argv = process.argv.slice(2);
   const command = argv[0] ?? "help";
   const args = parseCommandArgs(command, argv.slice(1));
@@ -161,6 +162,21 @@ Commands:
          [--diff-file d.diff] [--mode baseline|advanced] [--out dir]
   eval --label <name> --mode baseline|advanced [--cases eval/cases] [--only id1,id2] [--out eval-results]
   report --artifacts <report.json> [--out report.html]`);
+}
+
+/** Minimal .env loader: KEY=VALUE lines only; never overrides real env. */
+async function loadDotEnv(path: string): Promise<void> {
+  try {
+    const raw = await readFile(path, "utf8");
+    for (const line of raw.split("\n")) {
+      const m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)\s*$/);
+      if (!m) continue;
+      const value = m[2].replace(/^["']|["']$/g, "");
+      if (!(m[1] in process.env)) process.env[m[1]] = value;
+    }
+  } catch {
+    // No .env present; environment variables alone are fine.
+  }
 }
 
 main().catch((err: Error) => {
