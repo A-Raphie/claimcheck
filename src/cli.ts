@@ -62,6 +62,9 @@ async function main(): Promise<void> {
       const outDir = args.values.out ? String(args.values.out) : "site";
       const source = (args.values.artifacts as string) ?? "eval-results/advanced-harness-check/13-hard-mixed.report.json";
       const siteReport: RunReport = JSON.parse(await readFile(source, "utf8"));
+      if (source.includes("sample")) {
+        siteReport.mode = `sample ${siteReport.mode}` as RunReport["mode"];
+      }
       await mkdir(outDir, { recursive: true });
       const { renderLanding } = await import("./landing.js");
       const { renderTryPage } = await import("./tryPage.js");
