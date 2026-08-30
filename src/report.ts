@@ -1,27 +1,26 @@
 import type { ClaimResult, RunReport, Verdict } from "./types.js";
 
-// Mirror: winsznx/lazaret (verified from lazaret.pages.dev production CSS, Aug 30 2026).
-// Choice recorded: mirroring lazaret over metrx (warm certificate) and conduit (light
-// institutional); dark instrument with the evidence path as hero matches Claimcheck's
-// domain and judged-demo conditions. Swap the :root block to change mirrors.
-// Sacrifice: no webfont links, local stacks only, because the report must render with
-// zero network requests (a shipped, tested product claim). DM Sans and DM Mono are
-// used when installed locally and degrade to system stacks otherwise.
+// Mirror: winsznx/metrx /proof (metrx.pages.dev/proof) — SEEN Aug 30 2026, not just
+// curl'd. Same page type as a Claimcheck report: a public proof hub. Grammar observed
+// from the live page: warm paper canvas, white hairline cards, near-black ink,
+// uppercase mono micro-labels (PROOF HUB, ORDERS, CLAIM LEDGER), big stat numerals,
+// tri-state verdict accents (bot green / clay / amber), IBM Plex Mono, claim-ledger
+// footer with a re-verify command. Earlier attempt failed because tokens were read
+// from CSS without seeing which surface wears them: lazaret's front door is LIGHT
+// editorial, metrx's proof hub is warm paper — both mirrors are light. Dark was wrong.
+// Sacrifice: no webfont link; IBM Plex Mono used when installed locally, system mono
+// otherwise, because the report must render with zero network requests.
 
-const VERDICT_CLASS: Record<Verdict, string> = {
-  VERIFIED: "ok",
-  REFUTED: "bad",
-  UNVERIFIABLE: "warn",
-};
-const VERDICT_GLYPH: Record<Verdict, string> = {
-  VERIFIED: "\u2713",
-  REFUTED: "\u2715",
-  UNVERIFIABLE: "?",
-};
+const VERDICT = {
+  VERIFIED: { text: "#0b6e50", soft: "rgba(20, 199, 154, 0.14)", dot: "#14c79a", glyph: "\u2713" },
+  REFUTED: { text: "#9c3b24", soft: "rgba(156, 59, 36, 0.10)", dot: "#9c3b24", glyph: "\u2715" },
+  UNVERIFIABLE: { text: "#8a6420", soft: "rgba(215, 160, 74, 0.16)", dot: "#d7a04a", glyph: "?" },
+} as const;
 
 export function renderHtmlReport(report: RunReport): string {
   const counts = countVerdicts(report.claims);
   const cards = report.claims.map(card).join("\n");
+  const headline = `${counts.VERIFIED} verified. ${counts.REFUTED} refuted. ${counts.UNVERIFIABLE} undecidable.`;
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -29,123 +28,114 @@ export function renderHtmlReport(report: RunReport): string {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Claimcheck report</title>
 <style>
-  /* Token block: the only place raw colors live. Ladder from lazaret's verified
-     zinc scale; verdict colors derived muted and always label-paired, never
-     color alone. */
+  /* Token block: the only place raw colors live. Values from metrx.pages.dev
+     production CSS (Aug 30 2026), observed on its /proof surface. */
   :root {
-    --canvas: #09090b;        /* obsidian page */
-    --surface: #18181b;       /* graphite card */
-    --surface-2: #1f1f23;     /* raised card: graphite one step up */
-    --line: #27272a;          /* slate hairline */
-    --line-strong: #3f3f46;   /* iron, hover and emphasis borders */
-    --ink: #f4f4f5;           /* paper: primary text */
-    --ink-2: #a1a1aa;         /* ash: secondary text */
-    --ink-3: #71717a;         /* fog: labels, only on surface where contrast holds */
-    --ember: #ff5a00;         /* brand accent: evidence paths, never a verdict */
-    --ember-tint: rgba(255, 90, 0, 0.1);
-    --ok: #5ec98c;            /* VERIFIED, muted green */
-    --ok-tint: rgba(94, 201, 140, 0.12);
-    --bad: #ee6f6f;           /* REFUTED, muted red */
-    --bad-tint: rgba(238, 111, 111, 0.12);
-    --warn: #d9a83e;          /* UNVERIFIABLE, muted amber */
-    --warn-tint: rgba(217, 168, 62, 0.12);
-    --r-card: 24px;
-    --r-ctrl: 14px;
-    --r-pill: 999px;
-    --pad-card: 24px;
-    --sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --paper: #f7f1e8;      /* warm canvas */
+    --surface: #fffdf9;    /* white-warm card */
+    --line: rgba(20, 19, 17, 0.10);
+    --line-strong: rgba(20, 19, 17, 0.22);
+    --ink: #141311;        /* near-black warm */
+    --ink-2: #4b5563;      /* slate body */
+    --ink-3: #8a8178;      /* stone, labels on white only */
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --r-card: 16px;
+    --r-input: 10px;
   }
   * { box-sizing: border-box; }
-  html { scrollbar-gutter: stable; }
   body {
-    margin: 0; background: var(--canvas); color: var(--ink);
-    font: 400 15px/1.6 var(--sans);
+    margin: 0; background: var(--paper); color: var(--ink);
+    font: 400 17px/1.55 var(--sans);
     -webkit-font-smoothing: antialiased;
   }
-  .shell { max-width: 880px; margin: 0 auto; padding: 28px 20px 72px; }
+  .shell { max-width: 1120px; margin: 0 auto; padding: 0 24px 72px; }
 
   .topbar {
-    display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
-    padding-bottom: 18px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 0; border-bottom: 1px solid var(--line);
   }
-  .wordmark {
-    font: 700 15px/1 var(--sans); letter-spacing: 0.22em; color: var(--ink);
-  }
-  .wordmark .tick { color: var(--ember); }
-  .runmeta { font: 400 13px/1 var(--mono); color: var(--ink-2); }
-  .runmeta b { color: var(--ink); font-weight: 500; }
+  .wordmark { font: 600 16px/1 var(--sans); letter-spacing: 0.01em; }
+  .wordmark .tick { color: #14c79a; }
+  .runmeta { font: 400 12px/1 var(--mono); color: var(--ink-2); }
 
-  .hero { padding: 30px 0 26px; }
-  .orient { margin: 0 0 22px; color: var(--ink-2); font-size: 15px; max-width: 60ch; }
-  .orient b { color: var(--ink); font-weight: 500; }
-  .counts { display: flex; gap: 28px; flex-wrap: wrap; align-items: flex-end; }
-  .count { min-width: 96px; }
-  .count .n {
-    font: 500 32px/1 var(--sans); font-variant-numeric: tabular-nums;
-    letter-spacing: -0.02em;
+  .eyebrow {
+    font: 500 11px/1 var(--mono); letter-spacing: 0.18em; color: var(--ink-3);
+    text-transform: uppercase; margin: 52px 0 14px;
   }
-  .count .l {
-    font: 400 12px/1.4 var(--mono); letter-spacing: 0.08em; color: var(--ink-2);
-    margin-top: 6px;
+  h1 {
+    font: 600 44px/1.15 var(--sans); letter-spacing: -0.02em;
+    margin: 0 0 18px; max-width: 21ch;
   }
-  .count.ok .n { color: var(--ok); }
-  .count.bad .n { color: var(--bad); }
-  .count.warn .n { color: var(--warn); }
-  .dist { display: flex; height: 6px; border-radius: var(--r-pill); overflow: hidden; background: var(--surface-2); margin-top: 20px; }
-  .dist .seg-ok { background: var(--ok); }
-  .dist .seg-bad { background: var(--bad); }
-  .dist .seg-warn { background: var(--warn); }
-  .facts {
-    display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;
-    font: 400 12px/1 var(--mono); color: var(--ink-2);
-  }
-  .fact {
-    border: 1px solid var(--line); border-radius: var(--r-pill);
-    padding: 7px 12px; background: var(--surface);
-  }
-  .fact b { color: var(--ink); font-weight: 500; }
+  .sub { max-width: 62ch; color: var(--ink-2); margin: 0 0 36px; }
+  .sub b { color: var(--ink); font-weight: 500; }
 
-  .cards { display: grid; gap: 14px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .stat {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-card); padding: 18px 20px;
+  }
+  .stat .l {
+    font: 500 10px/1 var(--mono); letter-spacing: 0.16em; color: var(--ink-3);
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .stat .n {
+    font: 400 34px/1 var(--sans); letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .u { font: 400 12px/1.5 var(--mono); color: var(--ink-2); margin-top: 10px; }
+
+  .seclabel {
+    font: 500 11px/1 var(--mono); letter-spacing: 0.18em; color: var(--ink-3);
+    text-transform: uppercase; margin: 46px 0 16px;
+  }
+  .cards { display: grid; gap: 12px; }
   .card {
     background: var(--surface); border: 1px solid var(--line);
-    border-radius: var(--r-card); padding: var(--pad-card);
-    transition: border-color 0.15s ease-out, background-color 0.15s ease-out;
+    border-radius: var(--r-card); padding: 20px 22px;
   }
-  .card:hover, .card:focus-visible { background: var(--surface-2); border-color: var(--line-strong); }
-  .card:focus-visible { outline: 3px solid var(--ember); outline-offset: 3px; }
-  .card-head { display: flex; gap: 12px; align-items: baseline; }
-  .cid { font: 500 13px/1 var(--mono); color: var(--ink-2); flex: 0 0 auto; }
+  .card-head { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+  .cid { font: 400 12px/1 var(--mono); color: var(--ink-3); }
   .verdict {
-    flex: 0 0 auto; font: 500 12px/1 var(--mono); letter-spacing: 0.08em;
-    border-radius: var(--r-pill); padding: 5px 11px;
+    display: inline-flex; align-items: center; gap: 7px;
+    font: 500 11px/1 var(--mono); letter-spacing: 0.12em;
+    border-radius: 999px; padding: 5px 11px;
   }
-  .verdict.ok { color: var(--ok); background: var(--ok-tint); }
-  .verdict.bad { color: var(--bad); background: var(--bad-tint); }
-  .verdict.warn { color: var(--warn); background: var(--warn-tint); }
-  .claim { font-size: 15px; color: var(--ink); }
+  .verdict .dot { width: 7px; height: 7px; border-radius: 999px; }
+  .claim { font-size: 16px; font-weight: 500; }
   .lbl {
-    font: 400 11px/1 var(--mono); letter-spacing: 0.14em; color: var(--ink-2);
-    text-transform: uppercase; margin: 16px 0 8px;
+    font: 500 10px/1 var(--mono); letter-spacing: 0.16em; color: var(--ink-3);
+    text-transform: uppercase; margin: 14px 0 8px;
   }
   .path {
     display: block; font: 400 13px/1.7 var(--mono); color: var(--ink-2);
-    background: var(--canvas); border-left: 2px solid var(--ember);
-    border-radius: 0 var(--r-ctrl) var(--r-ctrl) 0;
-    padding: 12px 16px; white-space: pre-wrap; word-break: break-word;
+    background: var(--paper); border-left: 2px solid var(--line-strong);
+    border-radius: 0 var(--r-input) var(--r-input) 0;
+    padding: 10px 14px; white-space: pre-wrap; word-break: break-word;
     overflow-x: auto;
   }
-  .rationale { margin: 12px 0 0; color: var(--ink-2); font-size: 14px; max-width: 68ch; }
+  .card.REFUTED .path { border-left-color: #9c3b24; }
+  .card.VERIFIED .path { border-left-color: #14c79a; }
+  .card.UNVERIFIABLE .path { border-left-color: #d7a04a; }
+  .rationale { margin: 10px 0 0; color: var(--ink-2); font-size: 15px; max-width: 72ch; }
 
-  footer { margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--line); }
-  .legend { font: 400 13px/1.8 var(--mono); color: var(--ink-2); }
-  .legend b { color: var(--ink); font-weight: 500; }
+  .ledger {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-card); padding: 22px 24px; margin-top: 46px;
+  }
+  .ledger p { margin: 0 0 10px; color: var(--ink-2); font-size: 15px; }
+  .ledger p b { color: var(--ink); font-weight: 500; }
+  .ledger code {
+    display: inline-block; font: 500 13px/1 var(--mono); color: var(--ink);
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: 6px; padding: 4px 8px; margin: 2px 0 8px;
+  }
 
-  @media (max-width: 560px) {
-    .shell { padding: 20px 14px 56px; }
-    .counts { gap: 18px; }
-    .count .n { font-size: 26px; }
-    .card { padding: 18px; border-radius: 18px; }
+  @media (max-width: 720px) {
+    h1 { font-size: 32px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .shell { padding: 0 16px 56px; }
+    .card { padding: 16px; }
   }
   @media (prefers-reduced-motion: reduce) {
     * { transition-duration: 0.01ms !important; }
@@ -155,42 +145,37 @@ export function renderHtmlReport(report: RunReport): string {
 <body>
 <div class="shell">
   <header class="topbar">
-    <div class="wordmark">CLAIM<span class="tick">CHECK</span></div>
-    <div class="runmeta">${escapeHtml(report.mode)} run · <b>${escapeHtml(report.model)}</b> · ${report.startedAt.slice(0, 10)}</div>
+    <div class="wordmark"><span class="tick">\u2713</span> Claimcheck</div>
+    <div class="runmeta">${escapeHtml(report.model)} · ${escapeHtml(report.mode)} run · ${report.startedAt.slice(0, 10)}</div>
   </header>
 
-  <section class="hero">
-    <p class="orient"><b>Every claim about this code change was checked against executed evidence.</b>
-    ${counts.total} claims, each judged from what the repository actually contains and runs, not from how the change reads.</p>
-    <div class="counts">
-      <div class="count ok"><div class="n">${counts.VERIFIED}</div><div class="l">VERIFIED</div></div>
-      <div class="count bad"><div class="n">${counts.REFUTED}</div><div class="l">REFUTED</div></div>
-      <div class="count warn"><div class="n">${counts.UNVERIFIABLE}</div><div class="l">UNVERIFIABLE</div></div>
-    </div>
-    <div class="dist" role="img" aria-label="${counts.VERIFIED} verified, ${counts.REFUTED} refuted, ${counts.UNVERIFIABLE} unverifiable">
-      <div class="seg-ok" style="width: ${pct(counts.VERIFIED, counts.total)}%"></div>
-      <div class="seg-bad" style="width: ${pct(counts.REFUTED, counts.total)}%"></div>
-      <div class="seg-warn" style="width: ${pct(counts.UNVERIFIABLE, counts.total)}%"></div>
-    </div>
-    <div class="facts">
-      <span class="fact">wall time <b>${(report.durationMs / 1000).toFixed(1)}s</b></span>
-      <span class="fact">model cost <b>$${report.usage.costUsd.toFixed(5)}</b></span>
-      <span class="fact">model calls <b>${report.usage.calls}</b></span>
-      <span class="fact">evidence actions <b>${report.claims.reduce((a, c) => a + c.evidence.length, 0)}</b></span>
-    </div>
-  </section>
+  <div class="eyebrow">Proof report</div>
+  <h1>${escapeHtml(headline)}</h1>
+  <p class="sub">Every claim about this code change was checked against <b>executed evidence</b>:
+  files read, searches run, and test suites executed inside the repository itself.
+  Nothing below is asserted above the evidence behind it.</p>
 
+  <div class="stats">
+    <div class="stat"><div class="l">Claims checked</div><div class="n">${counts.total}</div><div class="u">3 verdict classes</div></div>
+    <div class="stat"><div class="l">Evidence actions</div><div class="n">${report.claims.reduce((a, c) => a + c.evidence.length, 0)}</div><div class="u">reads · searches · test runs</div></div>
+    <div class="stat"><div class="l">Wall time</div><div class="n">${(report.durationMs / 1000).toFixed(1)}<span style="font-size: 20px">s</span></div><div class="u">end to end</div></div>
+    <div class="stat"><div class="l">Model cost</div><div class="n">$${report.usage.costUsd.toFixed(5)}</div><div class="u">${report.usage.calls} model calls</div></div>
+  </div>
+
+  <div class="seclabel">All claims</div>
   <main class="cards">
 ${cards}
   </main>
 
-  <footer>
-    <p class="legend"><b>VERIFIED</b>: evidence directly proves the claim true.
+  <section class="ledger">
+    <div class="seclabel" style="margin: 0 0 12px">Claim ledger</div>
+    <p>Every verdict above cites the evidence that decided it. Nothing on this page is
+    asserted above the evidence behind it. Re-check everything by regenerating the report:</p>
+    <code>claimcheck verify --repo &lt;path&gt; --claims-file claims.md</code>
+    <p style="margin: 6px 0 0"><b>VERIFIED</b>: evidence directly proves the claim true.
     <b>REFUTED</b>: evidence directly proves it false.
-    <b>UNVERIFIABLE</b>: the repository cannot decide it.
-    Every verdict cites the evidence that decided it. Regenerate this report with
-    <b>claimcheck report</b>.</p>
-  </footer>
+    <b>UNVERIFIABLE</b>: the repository cannot decide it, and the report refuses to guess.</p>
+  </section>
 </div>
 </body>
 </html>
@@ -198,15 +183,14 @@ ${cards}
 }
 
 function card(c: ClaimResult): string {
-  const cls = VERDICT_CLASS[c.verdict] ?? "warn";
-  const glyph = VERDICT_GLYPH[c.verdict] ?? "?";
-  return `    <article class="card" tabindex="0">
+  const v = VERDICT[c.verdict] ?? VERDICT.UNVERIFIABLE;
+  return `    <article class="card ${c.verdict}">
       <div class="card-head">
         <span class="cid">${escapeHtml(c.id)}</span>
-        <span class="verdict ${cls}">${glyph} ${c.verdict}</span>
+        <span class="verdict" style="color: ${v.text}; background: ${v.soft}"><span class="dot" style="background: ${v.dot}"></span>${c.verdict}</span>
         <span class="claim">${escapeHtml(c.text)}</span>
       </div>
-      <div class="lbl">evidence</div>
+      <div class="lbl">Evidence</div>
       <code class="path">${escapeHtml(c.citation)}</code>
       <p class="rationale">${escapeHtml(c.rationale)}</p>
     </article>`;
@@ -216,10 +200,6 @@ function countVerdicts(claims: ClaimResult[]): Record<Verdict | "total", number>
   const out = { VERIFIED: 0, REFUTED: 0, UNVERIFIABLE: 0, total: claims.length };
   for (const c of claims) out[c.verdict] += 1;
   return out;
-}
-
-function pct(part: number, total: number): number {
-  return total ? Math.round((part / total) * 100) : 0;
 }
 
 function escapeHtml(s: string): string {

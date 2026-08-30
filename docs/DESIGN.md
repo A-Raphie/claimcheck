@@ -1,41 +1,50 @@
 # Design note: report page
 
-## Mirror selection (winsznx-ui Step 0)
+## Mirror history, including the failure
 
-Three candidates read from github.com/winsznx, tokens verified from each site's
-production CSS on Aug 30 2026:
+First attempt (commit 180a4e3): picked "lazaret" as mirror from `curl`-verified CSS
+tokens and built a dark zinc page. REJECTED by Raphie, and the rejection was correct at
+a deeper level than contrast ratios: **tokens were verified without ever seeing the
+site.** The visual pass then showed lazaret's front door is a LIGHT editorial page
+(paper canvas, huge black display type, ember data graphics); the dark tokens live in
+its stylesheet but not on the surface that defines its look. "Nothing on winsznx that
+looks like what you built" was literally true.
 
-| Candidate | Routes and role | Verified tokens | Fit |
-|---|---|---|---|
-| metrx | /proof verdict pages, AI verifier signs PAY/REFUND/SLASH publicly | paper #f7f1e8, surface #fffdf9, ink #141311, bot #14c79a, clay #9c3b24, amber #d7a04a, IBM Plex Mono, card 16px | Tri-state verdict accents built in; warm certificate register |
-| conduit | /verify/[id] settlement proof, "SETTLED_FINAL, 18/18" | white cards on #f5f5f5, ink #0a0a0a | Light institutional; least instrument-like |
-| lazaret | verdict with evidence path as hero (webpack-cli@7.2.1 -> ... -> debug@4.4.2) | obsidian #09090b, graphite #18181b, zinc ladder to snow #fff, ember #ff5a00, DM Sans + DM Mono, cards 24 to 32px | Same domain as Claimcheck: code verdict plus evidence path |
+Rule now enforced: **a mirror is verified by seeing it rendered, tokens are the second
+step, never the first.** CSS values are not a design.
 
-Choice: mirroring lazaret. Dark instrument with the evidence path as hero matches
-Claimcheck's product domain and judged-demo conditions (video, projector).
+## Current mirror: metrx /proof (seen Aug 30 2026)
 
-## Stated sacrifices
+metrx.pages.dev/proof is the same page type as a Claimcheck report: a public proof hub.
+Observed grammar, now reproduced:
 
-- Webfont fidelity: no font links are loaded because the report must render with zero
-  network requests (a shipped, testable product claim). DM Sans and DM Mono are used
-  when installed locally and degrade to system stacks otherwise.
-- The metrx warm-certificate direction was not taken; swapping the :root token block
-  is the entire cost of switching mirrors later.
+- warm paper canvas (#f7f1e8), white-warm cards (#fffdf9), hairline borders
+- near-black warm ink (#141311), slate body (#4b5563), stone micro-labels (#8a8178)
+- uppercase mono eyebrows and section labels (PROOF HUB, ALL ORDERS, CLAIM LEDGER)
+- display headline as a sentence ("Read the settlements. No wallet needed.")
+- stat cards: uppercase label, big numeral, small mono unit line
+- tri-state verdict accents from metrx's own palette: bot #14c79a / clay #9c3b24 /
+  amber #d7a04a, always dot + text label, text variants darkened for contrast on white
+  (#0b6e50 / #9c3b24 / #8a6420)
+- claim-ledger footer: "nothing asserted above the evidence" + re-verify command
 
-## Derivations
+## Sacrifices and derivations
 
-- Verdict colors are derived, not copied: muted green #5ec98c, red #ee6f6f, amber
-  #d9a83e on the zinc ladder, each always label-paired (glyph plus text), never color
-  alone. Ember stays the brand accent for evidence paths, never a verdict color.
-- Raised surface #1f1f23 is graphite one step up; lazaret's iron #3f3f46 is reserved
-  for strong borders.
+- No webfont link: IBM Plex Mono when installed locally, system stacks otherwise,
+  because the report must render with zero network requests (shipped claim, tested).
+- Headline counts ("2 verified. 2 refuted. 1 undecidable.") are a derivation: metrx's
+  headline sentence pattern applied to Claimcheck's verdict data.
+- Distribution bar from the dark attempt was dropped; the metrx grammar carries
+  magnitude in stat cards, not bars.
 
 ## Audit trail
 
-- Visual audit pass 1: type hierarchy, verdict glyphs, accented facts accepted;
-  flagged label contrast (fog on graphite measured about 3.7 to 1, under the 4.5 to 1
-  small-text floor). Fixed: labels and claim ids moved to ash. Computed-style check
-  now reports rgb(161,161,170) for both.
-- Mobile 375px pass: counts reflow, cards full width with reduced padding and radius,
-  evidence paths wrap without overflow.
-- Network check: zero non-navigation resource entries, confirming the offline claim.
+- Visual pass over every inspiration link Aug 30: beautifului (numbered index, live
+  demos), beui (big display + CLI block), rareui, transitions.dev (preview-stage card
+  grid), shadcn registry, reui (rail + counts + preview cards), ui-skills.com (skill
+  catalog), coss.com/ui (Base UI particles), designsystemchecklist.com, lazaret,
+  metrx /proof.
+- Contrast: verdict text colors darkened from raw metrx accents for 4.5:1 on white
+  cards; stone used only on white surfaces.
+- Mobile 720px: stats collapse to 2 columns, headline scales to 32px.
+- Zero network requests: verified again on this build.
