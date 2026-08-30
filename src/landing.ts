@@ -106,6 +106,14 @@ export async function renderLanding(reportPath: string): Promise<string> {
   .stat .n { font: 600 44px/1 var(--sans); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
   .stat .u { font: 400 13px/1.5 var(--mono); color: var(--ink-2); margin-top: 10px; }
 
+  .benefits { display: grid; gap: 10px; max-width: 820px; }
+  .benefit {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-card); padding: 18px 22px;
+    color: var(--ink-2); font-size: 15px;
+  }
+  .benefit b { color: var(--ink); font-weight: 500; display: block; margin-bottom: 6px; font-size: 16px; }
+
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; counter-reset: step; }
   .step {
     background: var(--surface); border: 1px solid var(--line);
@@ -181,6 +189,14 @@ export async function renderLanding(reportPath: string): Promise<string> {
   details[open] summary .chev { transform: rotate(45deg); }
   details p { margin: 12px 0 0; color: var(--ink-2); font-size: 15px; max-width: 68ch; }
 
+  .final {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-card); padding: 40px 32px; margin-top: 56px;
+    text-align: left;
+  }
+  .final h2 { margin: 0 0 10px; }
+  .final p { margin: 0 0 22px; color: var(--ink-2); max-width: 60ch; }
+
   footer {
     margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line);
     display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
@@ -220,7 +236,7 @@ export async function renderLanding(reportPath: string): Promise<string> {
     <span class="note">$0 to verify · any OpenAI-compatible model</span>
   </div>
 
-  <div class="seclabel" id="how">The problem in numbers</div>
+  <div class="seclabel">The problem in numbers</div>
   <h2>Convincing is not the same as done.</h2>
   <p class="secsub">A review queue full of agent-authored changes does not get re-derived by hand.
   The claims travel with the diff; the evidence stays behind.</p>
@@ -230,7 +246,15 @@ export async function renderLanding(reportPath: string): Promise<string> {
     <div class="stat"><div class="l">What guessing scores</div><div class="n">53.6<span style="font-size: 24px">%</span></div><div class="u">a no-evidence reviewer on our 28-claim benchmark: verdicts by vibes</div></div>
   </div>
 
-  <div class="seclabel">How it works</div>
+  <div class="seclabel">What you get</div>
+  <h2>Outcomes, not features.</h2>
+  <div class="benefits">
+    <div class="benefit"><b>A verdict on every claim in under a minute.</b> The planner picks minimal evidence, the sandbox runs it, the verifier cites its source. You read conclusions with receipts.</div>
+    <div class="benefit"><b>The whole 28-claim benchmark in about 20 seconds.</b> Planted ground truth, one command, no key: the harness proves the instrument before you trust a single verdict.</div>
+    <div class="benefit"><b>Undecidable claims named, not guessed.</b> Performance numbers and subjective quality get UNVERIFIABLE, so a confident lie never wears a green check.</div>
+  </div>
+
+  <div class="seclabel" id="how">How it works</div>
   <h2>Three moves, every claim.</h2>
   <p class="secsub">Two agent roles and one deterministic executor. The agents decide what
   evidence matters; a sandbox decides what is allowed to run.</p>
@@ -321,6 +345,16 @@ REFUTED · no test constructs a bounded cache</code>
       under eval-results/, and the mock path needs no key at all.</p>
     </details>
   </div>
+
+  <section class="final">
+    <h2>Stop trusting. Start checking.</h2>
+    <p>One repository, one claims file, one command. The report you just saw regenerates
+    from your own change with citations you can re-derive.</p>
+    <div class="cta">
+      <a class="btn" href="report.html">See a live report</a>
+      <span class="note">$0 · no API key needed for the mock run · no signup</span>
+    </div>
+  </section>
 
   <footer>
     <span>Built for the micro1 Frontier Engineering Challenge 2026 · built with coding agents, disclosed</span>
