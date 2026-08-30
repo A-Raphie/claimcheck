@@ -57,6 +57,18 @@ async function main(): Promise<void> {
       console.log(`report written to ${out}`);
       break;
     }
+    case "site": {
+      const { mkdir } = await import("node:fs/promises");
+      const outDir = args.values.out ? String(args.values.out) : "site";
+      const source = (args.values.artifacts as string) ?? "eval-results/advanced-harness-check/13-hard-mixed.report.json";
+      const siteReport: RunReport = JSON.parse(await readFile(source, "utf8"));
+      await mkdir(outDir, { recursive: true });
+      const { renderLanding } = await import("./landing.js");
+      await writeFile(`${outDir}/index.html`, await renderLanding(source));
+      await writeFile(`${outDir}/report.html`, renderHtmlReport(siteReport));
+      console.log(`site written to ${outDir}/ (index.html, report.html)`);
+      break;
+    }
     default:
       usage();
   }
@@ -168,7 +180,8 @@ Commands:
   verify --repo <path> --claims "<line per claim>" [--claims-file file.json]
          [--diff-file d.diff] [--mode baseline|advanced] [--out dir]
   eval --label <name> --mode baseline|advanced [--cases eval/cases] [--only id1,id2] [--out eval-results]
-  report --artifacts <report.json> [--out report.html]`);
+  report --artifacts <report.json> [--out report.html]
+  site [--artifacts report.json] [--out site]    landing + live report`);
 }
 
 function makeAgent(): Agent {

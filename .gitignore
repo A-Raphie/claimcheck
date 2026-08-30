@@ -1,6 +1,7 @@
 node_modules/
 dist/
 eval-results/*/
+!site/
 !eval-results/.gitkeep
 tmp/
 *.log

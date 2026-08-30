@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claimcheck · verify what your coding agent claims</title>
+<meta name="description" content="Claimcheck fact-checks claims about a code change against executed evidence: files read, searches run, test suites executed in the repository itself. VERIFIED, REFUTED, or UNVERIFIABLE, with citations.">
+<meta name="theme-color" content="#f7f1e8">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Claimcheck · verify what your coding agent claims">
+<meta property="og:description" content="Every claim gets a verdict from executed evidence. Nothing is asserted above the evidence behind it.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23141311'/%3E%3Cpath d='M9 16.5l5 5 9-11' stroke='%2314c79a' stroke-width='3.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --paper: #f7f1e8;
+    --surface: #fffdf9;
+    --line: rgba(20, 19, 17, 0.10);
+    --line-strong: rgba(20, 19, 17, 0.22);
+    --ink: #141311;
+    --ink-2: #4b5563;
+    --ink-3: #6f675e;
+    --ok: #14c79a;
+    --ok-text: #0b6e50;
+    --bad-text: #9c3b24;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --r-card: 16px;
+    --r-inner: 4px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font: 400 17px/1.55 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  .shell { max-width: 1120px; margin: 0 auto; padding: 0 24px 64px; }
+  a { color: var(--ink); text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
+  a:hover { text-decoration-color: var(--ink); }
+  a.btn {
+    display: inline-block; text-decoration: none;
+    background: var(--ink); color: #fff;
+    border-radius: 10px; padding: 12px 20px;
+    font: 500 15px/1 var(--sans);
+    transition: transform 0.15s ease-out;
+  }
+  a.btn:hover { transform: scale(0.98); }
+  a.btn:focus-visible, a:focus-visible, summary:focus-visible {
+    outline: 3px solid var(--ink); outline-offset: 3px; border-radius: 6px;
+  }
+  a.ghost { text-decoration: none; border: 1px solid var(--line-strong); border-radius: 10px; padding: 12px 20px; font: 500 15px/1 var(--sans); }
+  a.ghost:hover { background: var(--surface); }
+
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px;
+    padding: 20px 0; border-bottom: 1px solid var(--line);
+  }
+  .wordmark { font: 600 16px/1 var(--sans); text-decoration: none; }
+  .wordmark .tick { color: var(--ok); }
+  nav { display: flex; gap: 22px; font: 400 14px/1 var(--sans); }
+
+  .eyebrow {
+    font: 500 11px/1 var(--mono); letter-spacing: 0.18em; color: var(--ink-3);
+    text-transform: uppercase; margin: 64px 0 16px;
+  }
+  h1 {
+    font: 600 52px/1.08 var(--sans); letter-spacing: -0.025em;
+    margin: 0 0 20px; max-width: 19ch;
+    text-wrap: balance;
+  }
+  .sub { max-width: 60ch; color: var(--ink-2); margin: 0 0 30px; font-size: 18px; }
+  .sub b { color: var(--ink); font-weight: 500; }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .cta .note { font: 400 13px/1 var(--mono); color: var(--ink-3); }
+
+  .seclabel {
+    font: 500 11px/1 var(--mono); letter-spacing: 0.18em; color: var(--ink-3);
+    text-transform: uppercase; margin: 56px 0 16px;
+  }
+  h2 { font: 600 28px/1.2 var(--sans); letter-spacing: -0.015em; margin: 0 0 10px; text-wrap: balance; }
+  .secsub { max-width: 62ch; color: var(--ink-2); margin: 0 0 24px; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .stat {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-card); padding: 20px 22px;
+  }
+  .stat .l {
+    font: 500 10px/1 var(--mono); letter-spacing: 0.16em; color: var(--ink-3);
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .stat .n { font: 600 44px/1 var(--sans); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .stat .u { font: 400 13px/1.5 var(--mono); color: var(--ink-2); margin-top: 10px; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; counter-reset: step; }
+  .step {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-card); padding: 20px 22px;
+    animation: rise 0.18s ease-out both;
+  }
+  .step:nth-child(2) { animation-delay: 0.05s; }
+  .step:nth-child(3) { animation-delay: 0.1s; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(6px) scale(0.985); }
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .step { animation: none; } }
+  .step .num {
+    font: 500 12px/1 var(--mono); color: var(--ink-3);
+    display: block; margin-bottom: 14px;
+  }
+  .step h3 { font: 600 17px/1.3 var(--sans); margin: 0 0 8px; }
+  .step p { margin: 0 0 14px; color: var(--ink-2); font-size: 15px; }
+  .step code {
+    display: block; font: 400 12px/1.7 var(--mono); color: var(--ink-2);
+    background: var(--paper); border-left: 2px solid var(--line-strong);
+    border-radius: 0 var(--r-inner) var(--r-inner) 0;
+    padding: 8px 12px; white-space: pre-wrap; word-break: break-word;
+  }
+
+  .proof { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .mini {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-card); padding: 20px 22px;
+  }
+  .mini .head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; margin-bottom: 10px; }
+  .verdict {
+    display: inline-flex; align-items: center; gap: 7px;
+    font: 500 11px/1 var(--mono); letter-spacing: 0.12em;
+    border-radius: 999px; padding: 5px 11px;
+  }
+  .verdict .dot { width: 7px; height: 7px; border-radius: 999px; }
+  .mini .claim { font-size: 15px; font-weight: 500; }
+  .mini .path {
+    display: block; font: 400 12px/1.7 var(--mono); color: var(--ink-2);
+    background: var(--paper); border-left: 2px solid var(--ok);
+    border-radius: 0 var(--r-inner) var(--r-inner) 0;
+    padding: 8px 12px;
+  }
+  .mini.bad .path { border-left-color: #9c3b24; }
+  .minilink { display: inline-block; margin-top: 18px; font: 500 15px/1 var(--sans); }
+
+  .repro {
+    background: var(--ink); color: #f4f4f5;
+    border-radius: var(--r-card); padding: 26px 28px;
+  }
+  .repro .seclabel { color: #a1a1aa; margin: 0 0 12px; }
+  .repro p { margin: 0 0 14px; color: #d4d4d8; max-width: 64ch; }
+  .repro pre {
+    margin: 0 0 8px; font: 400 13px/1.8 var(--mono); color: #e4e4e7;
+    overflow-x: auto;
+  }
+  .repro .dollar { color: #14c79a; }
+  .repro a { color: #fff; }
+
+  .faq { display: grid; gap: 10px; max-width: 760px; }
+  details {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-card); padding: 16px 20px;
+  }
+  summary {
+    cursor: pointer; font: 500 16px/1.4 var(--sans); list-style: none;
+    display: flex; justify-content: space-between; gap: 12px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary .chev { color: var(--ink-3); transition: transform 0.15s ease-out; }
+  details[open] summary .chev { transform: rotate(45deg); }
+  details p { margin: 12px 0 0; color: var(--ink-2); font-size: 15px; max-width: 68ch; }
+
+  footer {
+    margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    font: 400 13px/1.6 var(--mono); color: var(--ink-3);
+  }
+  footer a { color: var(--ink-2); }
+
+  @media (max-width: 720px) {
+    h1 { font-size: 34px; }
+    .stats, .steps, .proof { grid-template-columns: 1fr; }
+    .shell { padding: 0 16px 48px; }
+    .stat .n { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <a class="wordmark" href="index.html"><span class="tick" aria-hidden="true">✓</span> Claimcheck</a>
+    <nav aria-label="Site">
+      <a href="#how">How it works</a>
+      <a href="report.html">Live report</a>
+      <a href="#reproduce">Reproduce</a>
+    </nav>
+  </header>
+
+  <div class="eyebrow">Proof instrument for agent-made changes</div>
+  <h1>Your coding agent says it works. Claimcheck asks for the evidence.</h1>
+  <p class="sub">Maintainers reviewing AI-assisted pull requests get confident claims:
+  <b>"all tests pass", "empty input is covered", "no breaking changes".</b>
+  Claims are cheap to make and expensive to check by hand. Claimcheck verifies each one
+  against <b>executed evidence</b>: files read, searches run, test suites executed inside
+  the repository itself. Every verdict comes with a citation.</p>
+  <div class="cta">
+    <a class="btn" href="report.html">See a live report</a>
+    <a class="ghost" href="#reproduce">Run it yourself, no API key</a>
+    <span class="note">$0 to verify · any OpenAI-compatible model</span>
+  </div>
+
+  <div class="seclabel" id="how">The problem in numbers</div>
+  <h2>Convincing is not the same as done.</h2>
+  <p class="secsub">A review queue full of agent-authored changes does not get re-derived by hand.
+  The claims travel with the diff; the evidence stays behind.</p>
+  <div class="stats">
+    <div class="stat"><div class="l">The claim</div><div class="n">free</div><div class="u">any agent can print "all tests pass"</div></div>
+    <div class="stat"><div class="l">The check by hand</div><div class="n">~30<span style="font-size: 24px">min</span></div><div class="u">re-derive every claim from the diff yourself</div></div>
+    <div class="stat"><div class="l">What guessing scores</div><div class="n">53.6<span style="font-size: 24px">%</span></div><div class="u">a no-evidence reviewer on our 28-claim benchmark: verdicts by vibes</div></div>
+  </div>
+
+  <div class="seclabel">How it works</div>
+  <h2>Three moves, every claim.</h2>
+  <p class="secsub">Two agent roles and one deterministic executor. The agents decide what
+  evidence matters; a sandbox decides what is allowed to run.</p>
+  <div class="steps">
+    <div class="step">
+      <span class="num">01 · PLAN</span>
+      <h3>The planner picks minimal evidence</h3>
+      <p>For each claim it chooses 1 to 3 actions from a fixed menu, matched to what the claim needs.</p>
+      <code>"tests pass" -> list_tests, run_tests
+"no new deps" -> read_file package.json</code>
+    </div>
+    <div class="step">
+      <span class="num">02 · EXECUTE</span>
+      <h3>The sandbox runs it for real</h3>
+      <p>A copy of the repo, a command allowlist (node, git), timeouts, path containment. No network, no trust.</p>
+      <code>run_tests -> TAP output
+search "fetchUser" -> users.js:11</code>
+    </div>
+    <div class="step">
+      <span class="num">03 · VERDICT</span>
+      <h3>The verifier cites or refuses</h3>
+      <p>A strict contract: evidence proves it, refutes it, or the claim is UNVERIFIABLE. No guessing, ever.</p>
+      <code>VERIFIED · "# pass 3 / # fail 0"
+REFUTED · no test constructs a bounded cache</code>
+    </div>
+  </div>
+
+  <div class="seclabel">Live proof</div>
+  <h2>A verdict, and what decided it.</h2>
+  <p class="secsub">Two claims from the sample run below. Every verdict opens into its full
+  evidence trail: the exact commands and their raw output.</p>
+  <div class="proof">
+    <div class="mini">
+      <div class="head">
+        <span class="verdict" style="color: var(--ok-text); background: rgba(20,199,154,0.14)"><span class="dot" style="background: var(--ok)"></span>VERIFIED</span>
+        <span class="claim">All tests pass after this change.</span>
+      </div>
+      <code class="path">run_tests -&gt; node --test users.test.js cache.test.js -&gt; &quot;# pass 3 / # fail 0&quot;</code>
+    </div>
+    <div class="mini bad">
+      <div class="head">
+        <span class="verdict" style="color: var(--bad-text); background: rgba(156,59,36,0.10)"><span class="dot" style="background: #9c3b24"></span>REFUTED</span>
+        <span class="claim">The cache eviction behavior is covered by tests.</span>
+      </div>
+      <code class="path">cache.test.js:5-9 → createCache() called without maxEntries; no assertion on size() after 100+ sets</code>
+    </div>
+  </div>
+  <a class="minilink" href="report.html">Open the full report with evidence trails →</a>
+
+  <div class="seclabel" id="reproduce">Reproduce</div>
+  <h2>Verify all of it with no API key.</h2>
+  <p class="secsub">The mock run executes the same planner-executor-verifier loop with a
+  deterministic stand-in model: it scores what claim-checking-by-vibes scores, and it runs anywhere Node runs.</p>
+  <div class="repro">
+    <div class="seclabel">From a clean environment</div>
+    <pre><span class="dollar">$</span> git clone &lt;repo&gt; claimcheck && cd claimcheck
+<span class="dollar">$</span> npm install && npm run build && npm test
+<span class="dollar">$</span> node eval/build-cases.mjs
+<span class="dollar">$</span> CLAIMCHECK_MOCK=1 node dist/cli.js eval --label mock --mode advanced</pre>
+    <p>Add <b>CLAIMCHECK_API_KEY</b> to .env for model-driven runs (any OpenAI-compatible
+    endpoint; free tiers work). Full steps in <a href="https://github.com/A-Raphie/claimcheck#reproduce">REPRODUCTION.md</a>.</p>
+  </div>
+
+  <div class="seclabel">Questions</div>
+  <div class="faq">
+    <details>
+      <summary>What does UNVERIFIABLE mean?<span class="chev">+</span></summary>
+      <p>Some claims cannot be decided from a repository: "twice as fast", "more readable",
+      "cuts memory by 30 percent". Claimcheck refuses to guess and marks them UNVERIFIABLE.
+      A verdict that cannot be backed by evidence is treated as a bug, not a disclaimer.</p>
+    </details>
+    <details>
+      <summary>Which models does it use?<span class="chev">+</span></summary>
+      <p>Any OpenAI-compatible endpoint: OpenAI, Groq's free tier, OpenRouter, local servers.
+      Model and pricing are one environment variable each. The executor itself is deterministic
+      TypeScript with no runtime dependencies.</p>
+    </details>
+    <details>
+      <summary>What does a run cost?<span class="chev">+</span></summary>
+      <p>Each claim costs a handful of small model calls (a plan, then a judgment per claim).
+      The live report shows the exact figure for every run; the reported sample run came in
+      under half a cent. The mock mode costs nothing.</p>
+    </details>
+    <details>
+      <summary>How is this reproducible?<span class="chev">+</span></summary>
+      <p>The 13-case benchmark (28 claims with planted ground truth) is regenerated
+      deterministically by one script. Every reported number traces to committed artifacts
+      under eval-results/, and the mock path needs no key at all.</p>
+    </details>
+  </div>
+
+  <footer>
+    <span>Built for the micro1 Frontier Engineering Challenge 2026 · built with coding agents, disclosed</span>
+    <span><a href="report.html">live report</a> · <a href="https://github.com/A-Raphie/claimcheck">repo</a> · MIT</span>
+  </footer>
+</div>
+</body>
+</html>
