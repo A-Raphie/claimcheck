@@ -80,6 +80,30 @@
   h2 { font: 600 28px/1.2 var(--sans); letter-spacing: -0.015em; margin: 0 0 10px; text-wrap: balance; }
   .secsub { max-width: 62ch; color: var(--ink-2); margin: 0 0 24px; }
 
+  .idea { display: grid; grid-template-columns: 1fr auto 1fr; gap: 18px; align-items: start; }
+  .idea-h {
+    font: 500 11px/1 var(--mono); letter-spacing: 0.16em; color: var(--ink-3);
+    text-transform: uppercase; margin-bottom: 10px;
+  }
+  .idea-card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-card); padding: 20px 22px;
+  }
+  .idea-claim {
+    margin: 0 0 10px; font: 400 14px/1.6 var(--mono); color: var(--ink-2);
+    background: var(--paper); border-left: 2px solid var(--line-strong);
+    border-radius: 0 var(--r-inner) var(--r-inner) 0; padding: 8px 12px;
+  }
+  .idea-verdict { margin: 0 0 8px; font: 600 14px/1.5 var(--sans); }
+  .idea-verdict.ok { color: var(--ok-text); }
+  .idea-verdict.bad { color: var(--bad-text); }
+  .idea-path {
+    margin: 0 0 14px; font: 400 12px/1.7 var(--mono); color: var(--ink-2);
+    background: var(--paper); border-radius: var(--r-inner); padding: 6px 10px;
+  }
+  .idea-note { margin: 0; color: var(--ink-2); font-size: 14px; }
+  .idea-arrow { font: 400 28px/1 var(--sans); color: var(--ink-3); padding-top: 64px; }
+
   .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
   .stat {
     background: var(--surface); border: 1px solid var(--line);
@@ -161,6 +185,14 @@
   .repro .dollar { color: #14c79a; }
   .repro a { color: #fff; }
 
+  .works { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .work {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-card); padding: 16px 20px;
+    color: var(--ink-2); font-size: 15px;
+  }
+  .work b { color: var(--ink); font-weight: 500; display: block; margin-bottom: 4px; }
+
   .faq { display: grid; gap: 10px; max-width: 760px; }
   details {
     background: var(--surface); border: 1px solid var(--line);
@@ -191,6 +223,9 @@
   footer a { color: var(--ink-2); }
 
   @media (max-width: 720px) {
+    .idea { grid-template-columns: 1fr; }
+    .idea-arrow { display: none; }
+    .works { grid-template-columns: 1fr; }
     h1 { font-size: 34px; }
     .stats, .steps, .proof { grid-template-columns: 1fr; }
     .shell { padding: 0 16px 48px; }
@@ -212,15 +247,38 @@
 
   <div class="eyebrow">Proof instrument for agent-made changes</div>
   <h1>Your coding agent says it works. Claimcheck asks for the evidence.</h1>
-  <p class="sub">Maintainers reviewing AI-assisted pull requests get confident claims:
+  <p class="sub">Someone (usually an AI) just changed your code and made claims about it:
   <b>"all tests pass", "empty input is covered", "no breaking changes".</b>
-  Claims are cheap to make and expensive to check by hand. Claimcheck verifies each one
-  against <b>executed evidence</b>: files read, searches run, test suites executed inside
-  the repository itself. Every verdict comes with a citation.</p>
+  Paste the claims. Claimcheck copies your repository, actually runs the tests, reads the
+  files, and tells you which claims were true, which were false, and which nobody could
+  check. Every answer comes with the proof.</p>
   <div class="cta">
     <a class="btn" href="try.html">Plan your claims in the browser</a>
     <a class="ghost" href="report.html">See a live report</a>
     <span class="note">$0 to verify · any OpenAI-compatible model</span>
+  </div>
+
+  <div class="seclabel">The whole idea in 20 seconds</div>
+  <div class="idea">
+    <div class="idea-col">
+      <div class="idea-h">What the agent said</div>
+      <div class="idea-card">
+        <p class="idea-claim">"All tests pass after this change."</p>
+        <p class="idea-claim">"Division by zero now throws an error."</p>
+        <p class="idea-note">A coding agent rewrote a divide function and summarized its work. Sounds finished. The test suite is right there in the repo.</p>
+      </div>
+    </div>
+    <div class="idea-arrow" aria-hidden="true">→</div>
+    <div class="idea-col">
+      <div class="idea-h">What was actually true</div>
+      <div class="idea-card">
+        <p class="idea-verdict bad">✕ REFUTED · "All tests pass"</p>
+        <p class="idea-path">node --test → "# pass 2 / # fail 1"</p>
+        <p class="idea-verdict ok">✓ VERIFIED · "throws an error"</p>
+        <p class="idea-path">math.js:3 → if (b === 0) throw new Error(...)</p>
+        <p class="idea-note">One run of the real test suite decided both. No reading between the lines.</p>
+      </div>
+    </div>
   </div>
 
   <div class="seclabel">The problem in numbers</div>
@@ -242,30 +300,31 @@
   </div>
 
   <div class="seclabel" id="how">How it works</div>
-  <h2>Three moves, every claim.</h2>
-  <p class="secsub">Two agent roles and one deterministic executor. The agents decide what
-  evidence matters; a sandbox decides what is allowed to run.</p>
+  <h2>You bring the change and the claims. It brings the proof.</h2>
   <div class="steps">
     <div class="step">
-      <span class="num">01 · PLAN</span>
-      <h3>The planner picks minimal evidence</h3>
-      <p>For each claim it chooses 1 to 3 actions from a fixed menu, matched to what the claim needs.</p>
-      <code>"tests pass" -> list_tests, run_tests
-"no new deps" -> read_file package.json</code>
+      <span class="num">STEP 1 · YOU PASTE THE CLAIMS</span>
+      <h3>Say what you were told</h3>
+      <p>Claims come from anywhere: the agent's PR description, the ticket it was supposed to
+      close, the release notes, or your own suspicions. One claim per line.</p>
+      <code>"all tests pass"
+"no new dependencies were added"</code>
     </div>
     <div class="step">
-      <span class="num">02 · EXECUTE</span>
-      <h3>The sandbox runs it for real</h3>
-      <p>A copy of the repo, a command allowlist (node, git), timeouts, path containment. No network, no trust.</p>
-      <code>run_tests -> TAP output
-search "fetchUser" -> users.js:11</code>
+      <span class="num">STEP 2 · CLAIMCHECK RUNS THE CHECKS</span>
+      <h3>It checks them for real</h3>
+      <p>It copies your repository into a sandbox, runs the actual test suite, reads the actual
+      files, and searches the actual code. Nothing is taken on faith.</p>
+      <code>run_tests -> "# pass 2 / # fail 1"
+search "fetchUser" -> still exported</code>
     </div>
     <div class="step">
-      <span class="num">03 · VERDICT</span>
-      <h3>The verifier cites or refuses</h3>
-      <p>A strict contract: evidence proves it, refutes it, or the claim is UNVERIFIABLE. No guessing, ever.</p>
-      <code>VERIFIED · "# pass 3 / # fail 0"
-REFUTED · no test constructs a bounded cache</code>
+      <span class="num">STEP 3 · YOU GET VERDICTS WITH RECEIPTS</span>
+      <h3>True, false, or nobody could check</h3>
+      <p>Each claim gets VERIFIED, REFUTED, or UNVERIFIABLE, with the exact output that decided
+      it. Undecidable claims say what would settle them. It never guesses.</p>
+      <code>REFUTED · "tests pass": 1 test failed
+UNVERIFIABLE · "2x faster": add a benchmark</code>
     </div>
   </div>
 
@@ -290,6 +349,14 @@ REFUTED · no test constructs a bounded cache</code>
     </div>
   </div>
   <a class="minilink" href="report.html">Open the full report with evidence trails →</a>
+
+  <div class="seclabel">What it works with</div>
+  <div class="works">
+    <div class="work"><b>Any git repository</b>with at least two commits: the change under review is the last one</div>
+    <div class="work"><b>Claims from anywhere</b>PR descriptions, tickets, release notes, or your own paste</div>
+    <div class="work"><b>Any OpenAI-compatible model</b>or none at all: the free mock mode runs the whole pipeline</div>
+    <div class="work"><b>Node 20+, zero dependencies</b>everything runs on your machine; nothing is uploaded</div>
+  </div>
 
   <div class="seclabel" id="reproduce">Reproduce</div>
   <h2>Verify all of it with no API key.</h2>

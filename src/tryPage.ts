@@ -173,11 +173,11 @@ export function renderTryPage(): string {
     </nav>
   </header>
 
-  <div class="eyebrow">Try the planner</div>
-  <h1>Paste the claims. Watch the plan happen.</h1>
-  <p class="sub">This is the planner's static layer, running in your browser: it classifies each
-  claim, names the evidence actions Claimcheck would run, and says what would settle it.
-  No model, no key, no network.</p>
+  <div class="eyebrow">Step 1 of 2 · free, no account</div>
+  <h1>Paste what your AI claimed about its code.</h1>
+  <p class="sub">Claimcheck will check each claim against your real repository: run the tests,
+  read the files, search the code. This page is step 1: it shows how each claim will be
+  checked, before anything runs. No model, no key, no network.</p>
 
   <section class="tool">
     <label for="claims">Claims, one per line</label>
@@ -205,12 +205,11 @@ export function renderTryPage(): string {
     </div>
   </section>
 
-  <p class="note">What you just saw is the planner's first half: claim classes and evidence
-  plans, chosen deterministically from the same menu the agent uses. The scored half runs via
-  CLI: the executor performs those actions in a sandbox copy of your repository, and the
-  verifier returns VERIFIED, REFUTED, or UNVERIFIABLE with citations.
-  See the <a href="index.html#reproduce">zero-key repro path</a> or the
-  <a href="report.html">live report</a>.</p>
+  <p class="note"><b>Step 2</b> is running Claimcheck on your repository: the checker performs
+  these exact actions in a sandbox copy, then returns VERIFIED, REFUTED, or UNVERIFIABLE for
+  each claim, with the output that decided it. The <a href="index.html#reproduce">zero-key
+  repro path</a> runs the whole thing free; the <a href="report.html">live report</a> shows a
+  finished run.</p>
 
   <footer>
     <span>Built for the micro1 Frontier Engineering Challenge 2026 · built with coding agents, disclosed</span>
