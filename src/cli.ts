@@ -20,8 +20,8 @@ async function main(): Promise<void> {
       const repoPath = requireString(args, "repo");
       const agent = makeAgent();
       const claims = await loadClaims(args);
-      const diff = args.values.diffFile
-        ? await readFile(String(args.values.diffFile), "utf8")
+      const diff = args.values["diff-file"]
+        ? await readFile(String(args.values["diff-file"]), "utf8")
         : await diffHead(repoPath);
       const mode = (args.values.mode as "baseline" | "advanced") ?? "advanced";
       const outDir = args.values.out ? String(args.values.out) : null;
@@ -69,8 +69,8 @@ function parseCommandArgs(command: string, rest: string[]) {
     options: {
       repo: { type: "string" },
       claims: { type: "string" },
-      claimsFile: { type: "string" },
-      diffFile: { type: "string" },
+      "claims-file": { type: "string" },
+      "diff-file": { type: "string" },
       mode: { type: "string" },
       out: { type: "string" },
       label: { type: "string" },
@@ -93,8 +93,8 @@ function requireString(args: ReturnType<typeof parseCommandArgs>, name: string):
 }
 
 async function loadClaims(args: ReturnType<typeof parseCommandArgs>): Promise<Claim[]> {
-  if (args.values.claimsFile) {
-    const path = String(args.values.claimsFile);
+  if (args.values["claims-file"]) {
+    const path = String(args.values["claims-file"]);
     const raw = await readFile(path, "utf8");
     if (/\.(json)$/i.test(path)) {
       const parsed = JSON.parse(raw);
