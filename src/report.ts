@@ -103,6 +103,8 @@ export function renderHtmlReport(report: RunReport): string {
     text-transform: uppercase; margin: 46px 0 16px;
   }
   .diffbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  details.diffbar { display: block; }
+  details.diffbar > summary { display: inline-block; }
   .filechip {
     display: inline-flex; align-items: center; gap: 8px;
     font: 400 12px/1 var(--mono); color: var(--ink);
