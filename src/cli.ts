@@ -94,9 +94,15 @@ function requireString(args: ReturnType<typeof parseCommandArgs>, name: string):
 
 async function loadClaims(args: ReturnType<typeof parseCommandArgs>): Promise<Claim[]> {
   if (args.values.claimsFile) {
-    const raw = JSON.parse(await readFile(String(args.values.claimsFile), "utf8"));
-    const list = Array.isArray(raw) ? raw : raw.claims;
-    return list.map((c: any, i: number) => ({ id: c.id ?? `C${i + 1}`, text: c.text ?? String(c) }));
+    const path = String(args.values.claimsFile);
+    const raw = await readFile(path, "utf8");
+    if (/\.(json)$/i.test(path)) {
+      const parsed = JSON.parse(raw);
+      const list = Array.isArray(parsed) ? parsed : parsed.claims;
+      return list.map((c: any, i: number) => ({ id: c.id ?? `C${i + 1}`, text: c.text ?? String(c) }));
+    }
+    const lines = raw.split(/\n+/).map((l) => l.replace(/^\s*(?:[-*]|\d+[.)])\s*/, "").trim()).filter(Boolean);
+    return lines.map((l, i) => ({ id: `C${i + 1}`, text: l }));
   }
   if (args.values.claims) {
     const text = String(args.values.claims);
