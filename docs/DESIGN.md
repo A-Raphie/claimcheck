@@ -1,50 +1,62 @@
-# Design note: report page
+# Claimcheck design language
 
-## Mirror history, including the failure
+Evidence-based design system doc (create-design-md shape): what governs the UI, where
+every value comes from, and the rules future surfaces must follow. Maintained by hand;
+regenerating surfaces without this doc is how drift starts.
 
-First attempt (commit 180a4e3): picked "lazaret" as mirror from `curl`-verified CSS
-tokens and built a dark zinc page. REJECTED by Raphie, and the rejection was correct at
-a deeper level than contrast ratios: **tokens were verified without ever seeing the
-site.** The visual pass then showed lazaret's front door is a LIGHT editorial page
-(paper canvas, huge black display type, ember data graphics); the dark tokens live in
-its stylesheet but not on the surface that defines its look. "Nothing on winsznx that
-looks like what you built" was literally true.
+## Product register
 
-Rule now enforced: **a mirror is verified by seeing it rendered, tokens are the second
-step, never the first.** CSS values are not a design.
+A proof instrument. The page type is a public proof hub (metrx /proof): calm, warm,
+evidence-first. Nothing is asserted above the evidence behind it. Verdicts are
+label-paired (dot + text), never color alone; undecidable claims are reported as
+undecidable, never guessed.
 
-## Current mirror: metrx /proof (seen Aug 30 2026)
+## Primary mirror
 
-metrx.pages.dev/proof is the same page type as a Claimcheck report: a public proof hub.
-Observed grammar, now reproduced:
+metrx.pages.dev/proof, seen rendered Aug 30 2026 (see ui-see-before-mirror rule in
+memory: SEE first, then curl tokens, cross-check both). Secondary reference: lazaret's
+light editorial typography.
 
-- warm paper canvas (#f7f1e8), white-warm cards (#fffdf9), hairline borders
-- near-black warm ink (#141311), slate body (#4b5563), stone micro-labels (#8a8178)
-- uppercase mono eyebrows and section labels (PROOF HUB, ALL ORDERS, CLAIM LEDGER)
-- display headline as a sentence ("Read the settlements. No wallet needed.")
-- stat cards: uppercase label, big numeral, small mono unit line
-- tri-state verdict accents from metrx's own palette: bot #14c79a / clay #9c3b24 /
-  amber #d7a04a, always dot + text label, text variants darkened for contrast on white
-  (#0b6e50 / #9c3b24 / #8a6420)
-- claim-ledger footer: "nothing asserted above the evidence" + re-verify command
+## Tokens
 
-## Sacrifices and derivations
+| Token | Value | Source / why |
+|---|---|---|
+| --paper | #f7f1e8 | metrx production CSS, its /proof canvas |
+| --surface | #fffdf9 | metrx surface, cards |
+| --line | rgba(20,19,17,.10) | hairlines; --line-strong .22 for emphasis rails |
+| --ink | #141311 | metrx ink |
+| --ink-2 | #4b5563 | metrx slate, body text |
+| --ink-3 | #6f675e | metrx stone #8a8178 darkened; 5.2:1 on white for small labels |
+| --ok / bad / warn | #14c79a / #9c3b24 / #d7a04a | metrx bot/clay/amber; text variants #0b6e50 / #9c3b24 / #8a6420 for 4.5:1 on white |
+| --r-card | 16px | metrx radius-card |
+| --r-inner | 4px | playbook: nested radii <= outer minus inset, floored at 4 |
+| --mono | IBM Plex Mono local, system fallback | metrx font; no webfont link by rule below |
 
-- No webfont link: IBM Plex Mono when installed locally, system stacks otherwise,
-  because the report must render with zero network requests (shipped claim, tested).
-- Headline counts ("2 verified. 2 refuted. 1 undecidable.") are a derivation: metrx's
-  headline sentence pattern applied to Claimcheck's verdict data.
-- Distribution bar from the dark attempt was dropped; the metrx grammar carries
-  magnitude in stat cards, not bars.
+Type: system sans for claims and display (600 weight, -0.02em tracking, text-wrap
+balance), mono for labels, evidence paths, and run metadata. Uppercase mono
+micro-labels at 10 to 11px, 0.16 to 0.18em tracking are the section voice.
 
-## Audit trail
+## Rules every surface inherits
 
-- Visual pass over every inspiration link Aug 30: beautifului (numbered index, live
-  demos), beui (big display + CLI block), rareui, transitions.dev (preview-stage card
-  grid), shadcn registry, reui (rail + counts + preview cards), ui-skills.com (skill
-  catalog), coss.com/ui (Base UI particles), designsystemchecklist.com, lazaret,
-  metrx /proof.
-- Contrast: verdict text colors darkened from raw metrx accents for 4.5:1 on white
-  cards; stone used only on white surfaces.
-- Mobile 720px: stats collapse to 2 columns, headline scales to 32px.
-- Zero network requests: verified again on this build.
+1. Zero network requests: no webfonts, no CDN assets, inline SVG favicon. Verified
+   mechanically after every change (13-gate script pattern in git history).
+2. Playbook computed-detail rules apply in full: tabular-nums on data, 60 to 75ch
+   measure, :active feedback, entrances from ~98% scale with ease-out and first-load
+   stagger only, prefers-reduced-motion honored, skeletons over spinners, one clear
+   action in empty states, spacing over dividers.
+3. Verdict semantics are product law: VERIFIED / REFUTED / UNVERIFIABLE, dot + label,
+   per-verdict colored evidence rails. A surface that guesses is a bug.
+4. Contrast floors: 4.5:1 small text on white; stone-strong, never raw stone, on
+   white surfaces.
+5. Metadata: title, description, OG tags, theme-color, favicon on every page
+   (fixing-metadata pass).
+
+## History
+
+- v1 freehand dark: rejected (no skill anatomy).
+- v2 lazaret-mirror via curl'd tokens only: rejected (tokens without eyes; both real
+  mirrors are light). Full post-mortem led to the see-before-mirror rule.
+- v3 metrx /proof grammar, seen and reproduced: current. Hardened through
+  fixing-accessibility (label contrast, heading order, focus cleanup, empty state),
+  fixing-metadata (favicon, OG, description, theme-color), and playbook rules
+  (text-balance, tabular-nums, entrance system, nested radii).
