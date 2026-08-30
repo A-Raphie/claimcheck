@@ -64,9 +64,11 @@ async function main(): Promise<void> {
       const siteReport: RunReport = JSON.parse(await readFile(source, "utf8"));
       await mkdir(outDir, { recursive: true });
       const { renderLanding } = await import("./landing.js");
+      const { renderTryPage } = await import("./tryPage.js");
       await writeFile(`${outDir}/index.html`, await renderLanding(source));
+      await writeFile(`${outDir}/try.html`, renderTryPage());
       await writeFile(`${outDir}/report.html`, renderHtmlReport(siteReport));
-      console.log(`site written to ${outDir}/ (index.html, report.html)`);
+      console.log(`site written to ${outDir}/ (index.html, try.html, report.html)`);
       break;
     }
     default:
@@ -181,7 +183,7 @@ Commands:
          [--diff-file d.diff] [--mode baseline|advanced] [--out dir]
   eval --label <name> --mode baseline|advanced [--cases eval/cases] [--only id1,id2] [--out eval-results]
   report --artifacts <report.json> [--out report.html]
-  site [--artifacts report.json] [--out site]    landing + live report`);
+  site [--artifacts report.json] [--out site]    landing + try + live report`);
 }
 
 function makeAgent(): Agent {

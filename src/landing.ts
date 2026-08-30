@@ -218,6 +218,7 @@ export async function renderLanding(reportPath: string): Promise<string> {
     <a class="wordmark" href="index.html"><span class="tick" aria-hidden="true">\u2713</span> Claimcheck</a>
     <nav aria-label="Site">
       <a href="#how">How it works</a>
+      <a href="try.html">Try it</a>
       <a href="report.html">Live report</a>
       <a href="#reproduce">Reproduce</a>
     </nav>
@@ -231,8 +232,8 @@ export async function renderLanding(reportPath: string): Promise<string> {
   against <b>executed evidence</b>: files read, searches run, test suites executed inside
   the repository itself. Every verdict comes with a citation.</p>
   <div class="cta">
-    <a class="btn" href="report.html">See a live report</a>
-    <a class="ghost" href="#reproduce">Run it yourself, no API key</a>
+    <a class="btn" href="try.html">Plan your claims in the browser</a>
+    <a class="ghost" href="report.html">See a live report</a>
     <span class="note">$0 to verify · any OpenAI-compatible model</span>
   </div>
 

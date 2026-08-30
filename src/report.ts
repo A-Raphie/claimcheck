@@ -109,8 +109,15 @@ export function renderHtmlReport(report: RunReport): string {
     display: inline-flex; align-items: center; gap: 8px;
     font: 400 12px/1 var(--mono); color: var(--ink);
     background: var(--surface); border: 1px solid var(--line);
-    border-radius: 999px; padding: 7px 12px;
+    border-radius: 999px; padding: 7px 12px; cursor: pointer;
+    transition: border-color 0.15s ease-out, background-color 0.15s ease-out;
   }
+  .filechip:hover { border-color: var(--line-strong); }
+  .filechip:active { transform: scale(0.98); }
+  .filechip.is-flash { border-color: var(--ink); background: #fffdf9; }
+  .filechip:focus-visible { outline: 3px solid #ff5a00; outline-offset: 3px; }
+  code.path { cursor: pointer; }
+  code.path:hover { border-left-width: 3px; }
   .filechip .adds { color: var(--ok-text); }
   .filechip .dels { color: var(--bad-text); }
   details.diffbar > summary {
@@ -153,6 +160,20 @@ export function renderHtmlReport(report: RunReport): string {
   .dist .seg.ok { background: var(--ok); }
   .dist .seg.bad { background: #9c3b24; }
   .dist .seg.warn { background: #d7a04a; }
+
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .filter {
+    font: 500 12px/1 var(--mono); letter-spacing: 0.08em;
+    background: var(--surface); color: var(--ink-2);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 14px; cursor: pointer;
+    transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
+  }
+  .filter:hover { border-color: var(--line-strong); }
+  .filter:active { transform: scale(0.98); }
+  .filter.is-active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .filter:focus-visible { outline: 3px solid #ff5a00; outline-offset: 3px; }
+  .card.is-hidden { display: none; }
 
   .cards { display: grid; gap: 12px; }
   .card {
@@ -254,8 +275,16 @@ export function renderHtmlReport(report: RunReport): string {
   .ledger code {
     display: inline-block; font: 500 13px/1 var(--mono); color: var(--ink);
     background: var(--paper); border: 1px solid var(--line);
-    border-radius: 6px; padding: 4px 8px; margin: 2px 0 8px;
+    border-radius: 6px; padding: 4px 8px;
   }
+  .copyrow { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 2px 0 8px; }
+  .copybtn {
+    font: 500 12px/1 var(--mono); background: var(--ink); color: #fff;
+    border: none; border-radius: 6px; padding: 8px 14px; cursor: pointer;
+    transition: transform 0.15s ease-out;
+  }
+  .copybtn:active { transform: scale(0.98); }
+  .copybtn:focus-visible { outline: 3px solid #ff5a00; outline-offset: 3px; }
 
   @media (max-width: 720px) {
     h1 { font-size: 32px; }
@@ -297,7 +326,7 @@ export function renderHtmlReport(report: RunReport): string {
 ${diffStats.perFile
     .map(
       (f) =>
-        `    <span class="filechip">${escapeHtml(f.name)}<span class="adds">+${f.adds}</span><span class="dels">\u2212${f.dels}</span></span>`,
+        `    <button class="filechip" data-file="${escapeHtml(f.name)}" title="Show ${escapeHtml(f.name)} in the diff"><span class="adds">+${f.adds}</span><span class="dels">\u2212${f.dels}</span></button>`,
     )
     .join("\n")}
   </div>
@@ -316,6 +345,12 @@ ${diffStats.perFile
   </div>
 
   <div class="seclabel">All claims</div>
+  <div class="filters" role="group" aria-label="Filter claims by verdict">
+    <button class="filter is-active" data-filter="all">All ${counts.total}</button>
+    <button class="filter" data-filter="VERIFIED">Verified ${counts.VERIFIED}</button>
+    <button class="filter" data-filter="REFUTED">Refuted ${counts.REFUTED}</button>
+    <button class="filter" data-filter="UNVERIFIABLE">Undecidable ${counts.UNVERIFIABLE}</button>
+  </div>
   <main class="cards">
 ${claimsBody}
   </main>
@@ -324,12 +359,80 @@ ${claimsBody}
     <div class="seclabel" id="ledger-h" style="margin: 0 0 12px">Claim ledger</div>
     <p>Every verdict above cites the evidence that decided it. Nothing on this page is
     asserted above the evidence behind it. Re-check everything by regenerating the report:</p>
-    <code>claimcheck verify --repo &lt;path&gt; --claims-file claims.md</code>
+    <div class="copyrow">
+      <code id="repro-cmd">claimcheck verify --repo &lt;path&gt; --claims-file claims.md</code>
+      <button class="copybtn" data-copy="claimcheck verify --repo <path> --claims-file claims.md">Copy</button>
+    </div>
     <p style="margin: 6px 0 0"><b>VERIFIED</b>: evidence directly proves the claim true.
     <b>REFUTED</b>: evidence directly proves it false.
     <b>UNVERIFIABLE</b>: the repository cannot decide it, and the report refuses to guess.</p>
   </section>
 </div>
+
+<script>
+  (function () {
+    var filterBtns = Array.prototype.slice.call(document.querySelectorAll(".filter"));
+    var cards = Array.prototype.slice.call(document.querySelectorAll("main .card"));
+    filterBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        filterBtns.forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        var f = btn.getAttribute("data-filter");
+        cards.forEach(function (card) {
+          var show = f === "all" || card.classList.contains(f);
+          card.classList.toggle("is-hidden", !show);
+        });
+      });
+    });
+
+    function openDiff() {
+      var details = document.querySelector("details.diffbar");
+      if (details) details.open = true;
+      return document.querySelector(".diffbody");
+    }
+
+    function flashChip(name) {
+      var chip = document.querySelector('.filechip[data-file="' + name + '"]');
+      if (chip) {
+        chip.scrollIntoView({ block: "center" });
+        chip.classList.add("is-flash");
+        setTimeout(function () { chip.classList.remove("is-flash"); }, 1200);
+      }
+    }
+
+    document.querySelectorAll(".filechip[data-file]").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        var body = openDiff();
+        if (body) body.scrollIntoView({ block: "start" });
+      });
+    });
+
+    document.querySelectorAll("code.path").forEach(function (el) {
+      el.addEventListener("click", function () {
+        var text = el.textContent || "";
+        var m = text.match(/([A-Za-z0-9_\\-./]+\\.[a-z]+)/);
+        if (m) {
+          openDiff();
+          flashChip(m[1]);
+        }
+      });
+    });
+
+    var copyBtn = document.querySelector(".copybtn");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", function () {
+        var text = copyBtn.getAttribute("data-copy") || "";
+        var done = function () {
+          copyBtn.textContent = "Copied";
+          setTimeout(function () { copyBtn.textContent = "Copy"; }, 1400);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, done);
+        } else { done(); }
+      });
+    }
+  })();
+</script>
 </body>
 </html>
 `;
