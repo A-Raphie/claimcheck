@@ -28,29 +28,87 @@ def move(x, y):
     cliclick(f"m:{x},{y}")
     time.sleep(0.2)
 
+def drift(x1, y1, x2, y2, seconds):
+    # human-like travel: cliclick's animated dm: moves along a slight arc with
+    # overshoot + settle. Velocity bell: slow leave, fast middle, slow arrive.
+    dx, dy = x2 - x1, y2 - y1
+    dist = max(1.0, (dx * dx + dy * dy) ** 0.5)
+    px, py = -dy / dist, dx / dist  # perpendicular
+    arc = min(18.0, dist * 0.12)    # gentle arc offset
+    budget = max(0.3, seconds - 0.25)
+    seg = budget / 3.0
+    cliclick(f"m:{x1},{y1}")
+    time.sleep(0.06)
+    cliclick(f"dm:{int(x1 + dx * 0.4 + px * arc)},{int(y1 + dy * 0.4 + py * arc)}")
+    time.sleep(seg)
+    cliclick(f"dm:{int(x1 + dx * 0.85 + px * arc * 0.4)},{int(y1 + dy * 0.85 + py * arc * 0.4)}")
+    time.sleep(seg)
+    cliclick(f"dm:{int(x2 + dx * 0.03)},{int(y2 + dy * 0.03)}")  # overshoot
+    time.sleep(seg * 0.5)
+    cliclick(f"m:{x2},{y2}")  # settle back
+    time.sleep(seg * 0.5)
+
 def click(x, y):
     move(x, y)
     time.sleep(0.25)
     cliclick(f"c:{x},{y}")
 
-def scroll(clicks):
-    # proof-gated scroll: Page Down/Up glides, verified the page moved
-    pre, post = "/tmp/cc-pre.png", "/tmp/cc-post.png"
-    sh(f"screencapture -x {pre}")
-    code = 121 if clicks > 0 else 116  # Page Down / Page Up
-    for _ in range(max(1, abs(clicks))):
+_drift_n = [0]
+
+def drift(x1, y1, x2, y2, seconds):
+    # human travel: animated arc moves, velocity bell, overshoot-settle.
+    # every call lands somewhere slightly different and arcs the other way.
+    _drift_n[0] += 1
+    side = 1 if _drift_n[0] % 2 else -1
+    jx = ((_drift_n[0] * 37) % 19) - 9   # deterministic jitter, +-9px
+    jy = ((_drift_n[0] * 53) % 17) - 8
+    x2, y2 = x2 + jx, y2 + jy
+    dx, dy = x2 - x1, y2 - y1
+    dist = max(1.0, (dx * dx + dy * dy) ** 0.5)
+    px, py = -dy / dist, dx / dist
+    arc = side * min(20.0, dist * 0.14)
+    budget = max(0.3, seconds - 0.2)
+    seg = budget / 3.0
+    cliclick(f"m:{x1},{y1}")
+    time.sleep(0.05)
+    cliclick(f"dm:{int(x1 + dx * 0.4 + px * arc)},{int(y1 + dy * 0.4 + py * arc)}")
+    time.sleep(seg)
+    cliclick(f"dm:{int(x1 + dx * 0.85 + px * arc * 0.4)},{int(y1 + dy * 0.85 + py * arc * 0.4)}")
+    time.sleep(seg)
+    cliclick(f"dm:{int(x2 + dx * 0.04)},{int(y2 + dy * 0.04)}")  # overshoot
+    time.sleep(seg * 0.45)
+    cliclick(f"m:{x2},{y2}")  # settle
+    time.sleep(seg * 0.55)
+
+def wiggle(x, y, seconds):
+    # micro-drift so the cursor never freezes during narration holds
+    t_end = time.time() + seconds
+    i = 0
+    while time.time() < t_end:
+        dx = ((i * 13) % 9) - 4
+        dy = ((i * 7) % 7) - 3
+        cliclick(f"m:{x + dx},{y + dy}")
+        time.sleep(0.22)
+        i += 1
+
+def glide_scroll(clicks):
+    # arrow-key glide: 14 small steps, smooth on camera
+    code = 125 if clicks > 0 else 126
+    for _ in range(abs(clicks) * 7):
         osa(f'tell application "System Events" to key code {code}')
-        time.sleep(0.15)
-    sh(f"screencapture -x {post}")
-    if sh(f"cmp -s {pre} {post}").returncode == 0:
-        # page did not move: arrow-key fallback, then hard proof again
-        code = 125 if clicks > 0 else 126
-        for _ in range(14):
-            osa(f'tell application "System Events" to key code {code}')
-            time.sleep(0.04)
-        sh(f"screencapture -x {post}")
-        if sh(f"cmp -s {pre} {post}").returncode == 0:
-            print(f"  SCROLL PROOF FAILED ({clicks})")
+        time.sleep(0.045)
+
+def scroll(clicks):
+    # Page Down for big jumps; small click counts use arrow glide
+    if abs(clicks) <= 2:
+        glide_scroll(clicks)
+        return
+    for _ in range(2 if clicks > 0 else 2):
+        code = 121 if clicks > 0 else 116
+        osa(f'tell application "System Events" to key code {code}')
+        time.sleep(0.3)
+
+
 
 def demo_window():
     """Chrome frontmost, ONE dedicated demo window, filled to the frame."""
@@ -120,42 +178,45 @@ def prep_close():
 # ---------------- acts (inside the recording) ----------------
 
 def act_landing():
-    time.sleep(1.4)                # hero hold, VO opens
-    scroll(3)                      # hero -> whole-idea panels
-    time.sleep(1.8)
-    move(700, 620)
-    scroll(3)                      # idea -> problem stats
-    time.sleep(1.8)
-    scroll(2)                      # stats -> problem copy
+    drift(500, 430, 855, 480, 1.4)     # into the headline as VO opens
+    time.sleep(0.5)
+    drift(855, 480, 520, 1000, 1.5)    # travel down the claims
+    scroll(4)                          # glide: hero -> idea panels
+    drift(420, 480, 1300, 520, 1.6)    # sweep the idea panels
+    scroll(4)                          # glide: idea -> stats
+    drift(450, 480, 855, 430, 1.6)     # sweep the stat cards
+    scroll(3)
+    wiggle(855, 500, 1.0)
+    scroll(-12)                        # glide back to hero
+    drift(700, 500, 497, 890, 1.4)     # travel to the CTA
+    click(497, 890)                    # CLICK through to the planner (segues into S2)
     time.sleep(1.6)
-    scroll(-9)                     # back to the hero
-    time.sleep(1.2)
-    move(497, 890)                 # hover the primary CTA
-    time.sleep(2.2)
+
 
 def act_try():
-    time.sleep(1.4)                # page hold
-    click(855, 565)                # focus textarea
-    time.sleep(0.4)
+    drift(400, 400, 855, 565, 1.2)     # travel to the textarea
+    click(855, 565)
+    time.sleep(0.3)
     lines = ["All tests pass after this change.",
              "The bounded cache reduces memory usage by 30 percent."]
     for i, line in enumerate(lines):
         if i > 0:
             osa('tell application "System Events" to key code 36')
-            time.sleep(0.3)
+            time.sleep(0.25)
         osa(f'tell application "System Events" to keystroke {json.dumps(line)}')
-        time.sleep(0.4)
-    time.sleep(0.8)
-    move(460, 709)
+        time.sleep(0.35)
     time.sleep(0.4)
-    click(497, 709)                # Plan the evidence
-    time.sleep(3.0)                # results animate in
-    scroll(2)                      # reveal C1 + C2 rows
-    time.sleep(2.2)
-    move(560, 640)                 # hover the PERFORMANCE settle row
-    time.sleep(2.2)
-    scroll(2)                      # claims.json handoff
-    time.sleep(3.0)
+    drift(855, 640, 497, 709, 1.0)     # travel to the button
+    click(497, 709)                    # Plan the evidence
+    time.sleep(3.0)                    # results animate in
+    drift(500, 900, 560, 640, 1.2)     # onto C1
+    time.sleep(0.7)
+    drift(560, 640, 700, 900, 1.4)     # onto C2 settle row
+    wiggle(700, 900, 1.4)
+    scroll(2)
+    drift(500, 1050, 900, 1050, 1.2)
+    time.sleep(1.6)
+
 
 def act_terminal():
     t0 = time.time()
@@ -167,29 +228,37 @@ def act_terminal():
     time.sleep(1.0)
     osa('tell application "System Events" to tell process "Terminal" to set size of front window to {1710, 1000}')
     osa('tell application "System Events" to tell process "Terminal" to set position of front window to {0, 25}')
-    move(855, 400)
+    move(300, 380)
     while time.time() - t0 < 26:
-        time.sleep(4)
+        time.sleep(3.5)
         osa('tell application "System Events" to set frontmost of process "Terminal" to true')
+        y = 380 + int((time.time() - t0) * 9) % 260
+        drift(300, y, 700, y + 30, 0.8)
     time.sleep(max(0.5, 35.6 - (time.time() - t0)))
 
+
 def act_report():
-    time.sleep(2.2)                # hold: receipt + tinted diff (already open)
-    scroll(2)                      # through the diff
+    time.sleep(2.4)                    # hold: receipt + diff open
+    drift(500, 430, 855, 620, 1.2)     # cursor onto the diff
+    scroll(4)                          # glide through the tinted diff
+    time.sleep(0.8)
+    drift(855, 540, 500, 620, 1.0)
+    scroll(4)                          # glide diff -> cards
     time.sleep(1.4)
-    scroll(3)                      # diff -> weighted cards
-    time.sleep(2.0)
-    scroll(3)                      # cards -> settle line + ledger
-    time.sleep(2.2)
-    scroll(-9)                     # back to the top verdicts
-    time.sleep(2.0)
+    drift(430, 620, 700, 700, 1.4)     # sweep the verdict cards
+    scroll(3)                          # cards -> settle line + ledger
+    drift(700, 800, 855, 700, 1.0)
+    scroll(-14)                        # glide back to the verdicts
+    wiggle(500, 400, 1.2)
+
 
 def act_close():
-    time.sleep(2.4)                # self-audit report hold
-    goto(BASE + "/")               # nav motion to the landing
-    time.sleep(1.2)
-    move(700, 430)
-    time.sleep(1.2)
+    drift(500, 480, 900, 620, 1.6)     # sweep the self-audit verdicts
+    time.sleep(0.8)
+    goto(BASE + "/")                   # nav to the landing
+    drift(400, 430, 855, 500, 1.4)     # sweep the hero
+    time.sleep(0.6)
+
 
 SCENES = [
     ("s1-landing", 16.2, prep_landing, act_landing),
