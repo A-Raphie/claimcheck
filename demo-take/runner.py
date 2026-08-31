@@ -20,9 +20,12 @@ def cliclick(cmd):
     sh(f"cliclick {cmd}")
 
 def fullscreen_front(url=None):
-    """Put Chrome frontmost, fullscreen, optionally navigate active tab."""
+    """Put Chrome frontmost, fill the entire frame, optionally navigate active tab."""
     osa('tell application "Google Chrome" to activate')
-    time.sleep(0.6)
+    time.sleep(0.8)
+    osa('tell application "System Events" to tell process "Google Chrome" to set size of front window to {1710, 1080}')
+    osa('tell application "System Events" to tell process "Google Chrome" to set position of front window to {0, 24}')
+    time.sleep(0.8)
     if url:
         osa(f'tell application "Google Chrome" to set URL of active tab of front window to "{url}"')
     time.sleep(1.4)
@@ -47,7 +50,7 @@ def last_frame(name):
     return out
 
 def scene_landing(sec):
-    fullscreen_front("https://a-raphie.github.io/claimcheck/index.html")
+    fullscreen_front("https://claimcheck-three-snowy.vercel.app/index.html")
     time.sleep(2.0)
     t0 = time.time()
     def act():
@@ -60,7 +63,7 @@ def scene_landing(sec):
     time.sleep(max(0.5, sec - (time.time() - t0)))
 
 def scene_try(sec):
-    fullscreen_front("https://a-raphie.github.io/claimcheck/try.html")
+    fullscreen_front("https://claimcheck-three-snowy.vercel.app/try.html")
     time.sleep(2.0)
     t0 = time.time()
     # click the textarea (center-upper area of the tool card)
@@ -70,7 +73,7 @@ def scene_try(sec):
     osa(f'tell application "System Events" to keystroke {json.dumps(claims)}')
     time.sleep(0.6)
     # click Plan the evidence (below textarea)
-    cliclick("c:855,745")
+    cliclick("c:500,710")
     remaining = sec - (time.time() - t0)
     time.sleep(max(1.0, remaining - 1.0))
 
@@ -90,7 +93,7 @@ def scene_terminal(sec):
     time.sleep(max(1.0, sec - (time.time() - t0)))
 
 def scene_report(sec):
-    fullscreen_front("https://a-raphie.github.io/claimcheck/report.html?open=evidence")
+    fullscreen_front("https://claimcheck-three-snowy.vercel.app/report.html?open=evidence")
     time.sleep(2.5)
     t0 = time.time()
     # scroll to cards
@@ -102,7 +105,7 @@ def scene_report(sec):
     time.sleep(max(1.0, remaining - 1.0))
 
 def scene_close(sec):
-    fullscreen_front("https://a-raphie.github.io/claimcheck/selfaudit.html")
+    fullscreen_front("https://claimcheck-three-snowy.vercel.app/selfaudit.html")
     time.sleep(2.5)
     t0 = time.time()
     time.sleep(1.5)
@@ -113,7 +116,7 @@ def scene_close(sec):
 SCENES = [
     ("s1-landing", 14, scene_landing),
     ("s2-try", 22, scene_try),
-    ("s3-terminal", 48, scene_terminal),
+    ("s3-terminal", 62, scene_terminal),
     ("s4-report", 30, scene_report),
     ("s5-close", 20, scene_close),
 ]
