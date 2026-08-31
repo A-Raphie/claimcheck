@@ -1,0 +1,60 @@
+{
+ "workdir": "/Users/raphie/Documents/Hackathons/claimcheck/demo-take/pipeline-work",
+ "vo": "/Users/raphie/Documents/Hackathons/claimcheck/demo-take/vo/track.wav",
+ "out": "/Users/raphie/Documents/Hackathons/claimcheck/demo-take/final-v2.mp4",
+ "takes_dir": "/Users/raphie/Documents/Hackathons/claimcheck/demo-take/segs",
+ "scene_boundaries": [
+  {
+   "label": "S1|S2",
+   "lo": 8,
+   "hi": 20
+  },
+  {
+   "label": "S2|S3",
+   "lo": 30,
+   "hi": 48
+  },
+  {
+   "label": "S3|S4",
+   "lo": 68,
+   "hi": 84
+  },
+  {
+   "label": "S4|S5",
+   "lo": 88,
+   "hi": 100
+  }
+ ],
+ "scenes": [
+  {
+   "name": "s1-landing",
+   "duration": 16.2,
+   "accurate_frame": 4.2,
+   "head_hold": 3.0
+  },
+  {
+   "name": "s2-try",
+   "duration": 23.0,
+   "accurate_frame": 4.4,
+   "head_hold": 1.2
+  },
+  {
+   "name": "s3-terminal",
+   "duration": 35.6,
+   "accurate_frame": 3.6,
+   "head_hold": 1.2
+  },
+  {
+   "name": "s4-report",
+   "duration": 19.2,
+   "accurate_frame": 4.0,
+   "head_hold": 1.2
+  },
+  {
+   "name": "s5-close",
+   "duration": 9.9,
+   "accurate_frame": 3.6,
+   "head_hold": 1.2
+  }
+ ]
+}

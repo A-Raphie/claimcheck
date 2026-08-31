@@ -1,0 +1,43 @@
+{
+ "total": 100.943656,
+ "cuts": [
+  0.0,
+  15.59,
+  38.01,
+  73.04,
+  91.63,
+  100.943656
+ ],
+ "windows": [
+  {
+   "scene": "s1-landing",
+   "start": 0.0,
+   "end": 15.59,
+   "duration": 15.59
+  },
+  {
+   "scene": "s2-try",
+   "start": 15.59,
+   "end": 38.01,
+   "duration": 22.42
+  },
+  {
+   "scene": "s3-terminal",
+   "start": 38.01,
+   "end": 73.04,
+   "duration": 35.03
+  },
+  {
+   "scene": "s4-report",
+   "start": 73.04,
+   "end": 91.63,
+   "duration": 18.59
+  },
+  {
+   "scene": "s5-close",
+   "start": 91.63,
+   "end": 100.943656,
+   "duration": 9.31
+  }
+ ]
+}
