@@ -1,0 +1,1394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claimcheck report · run AE4E3</title>
+<meta name="description" content="Every claim about this code change was checked against executed evidence. 5 verified. 0 refuted. 0 undecidable. Nothing is asserted above the evidence behind it.">
+<meta name="theme-color" content="#f7f1e8">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Claimcheck report · run AE4E3">
+<meta property="og:description" content="Every claim about this code change was checked against executed evidence. 5 verified. 0 refuted. 0 undecidable. Nothing is asserted above the evidence behind it.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23141311'/%3E%3Cpath d='M8.5 10.5h5' stroke='%2314c79a' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M19 8l5 5m0-5l-5 5' stroke='%23ee6f6f' stroke-width='2.6' stroke-linecap='round'/%3E%3Cpath d='M8.5 20h5' stroke='%235ec98c' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M21.5 17.5c0-1.5 1.3-2.5 2.8-2.5 1.6 0 2.7 1 2.7 2.4 0 1.9-2.6 2-2.6 3.8' stroke='%23d9a83e' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='24.3' cy='24.6' r='1.4' fill='%23d9a83e'/%3E%3Cpath d='M8.5 24.5h5' stroke='%23eab308' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --paper: #f7f1e8;
+    --surface: #fffdf9;
+    --line: rgba(20, 19, 17, 0.10);
+    --line-strong: rgba(20, 19, 17, 0.22);
+    --ink: #141311;
+    --ink-2: #4b5563;
+    --ink-3: #6f675e;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --r-card: 16px;
+    --r-inner: 4px;
+    --ok: #14c79a;
+    --ok-text: #0b6e50;
+    --bad-text: #9c3b24;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font: 400 17px/1.55 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  .shell { max-width: 1120px; margin: 0 auto; padding: 0 24px 72px; }
+
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 6px 16px;
+    padding: 20px 0; border-bottom: 1px solid var(--line);
+  }
+  .wordmark { font: 600 16px/1 var(--sans); }
+  .wordmark .tick { color: var(--ok); }
+  .runmeta { font: 400 12px/1 var(--mono); color: var(--ink-2); }
+
+  .herozone {
+    background-image: repeating-linear-gradient(135deg, rgba(20,19,17,0.028) 0 1px, transparent 1px 9px);
+    margin: 0 -24px; padding: 0 24px 26px;
+  }
+  .eyebrow {
+    font: 500 11px/1 var(--mono); letter-spacing: 0.18em; color: var(--ink-3);
+    text-transform: uppercase; margin: 52px 0 14px;
+  }
+  h1 {
+    font: 600 44px/1.15 var(--sans); letter-spacing: -0.02em;
+    margin: 0 0 18px; max-width: 21ch;
+    text-wrap: balance;
+  }
+  .sub { max-width: 62ch; color: var(--ink-2); margin: 0 0 26px; }
+  .sub b { color: var(--ink); font-weight: 500; }
+  .receipt {
+    display: flex; gap: 8px 18px; flex-wrap: wrap; align-items: baseline;
+    font: 400 11px/1.6 var(--mono); letter-spacing: 0.08em; color: var(--ink-3);
+    border: 1px solid var(--line); border-radius: var(--r-inner);
+    background: var(--surface); padding: 9px 14px;
+  }
+  .receipt b { color: var(--ink); font-weight: 500; }
+
+  .seclabel {
+    font: 500 11px/1 var(--mono); letter-spacing: 0.18em; color: var(--ink-3);
+    text-transform: uppercase; margin: 46px 0 16px;
+  }
+  .diffbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  details.diffbar { display: block; }
+  details.diffbar > summary { display: inline-block; }
+  .filechip {
+    display: inline-flex; align-items: center; gap: 8px;
+    font: 400 12px/1 var(--mono); color: var(--ink);
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 999px; padding: 7px 12px; cursor: pointer;
+    transition: border-color 0.15s ease-out, background-color 0.15s ease-out;
+  }
+  .filechip:hover { border-color: var(--line-strong); }
+  .filechip:active { transform: scale(0.98); }
+  .filechip.is-flash { border-color: var(--ink); background: #fffdf9; }
+  .filechip:focus-visible { outline: 3px solid #ff5a00; outline-offset: 3px; }
+  code.path { cursor: pointer; }
+  code.path:hover { border-left-width: 3px; }
+  .filechip .adds { color: var(--ok-text); }
+  .filechip .dels { color: var(--bad-text); }
+  details.diffbar > summary {
+    list-style: none; cursor: pointer; user-select: none;
+    font: 500 12px/1 var(--mono); color: var(--ink-2);
+    border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px;
+    transition: background-color 0.15s ease-out;
+  }
+  details.diffbar > summary::-webkit-details-marker { display: none; }
+  details.diffbar > summary:hover { background: var(--surface); border-color: var(--line-strong); }
+  .diffbody {
+    margin-top: 10px; border: 1px solid var(--line); border-radius: var(--r-card);
+    background: var(--surface); padding: 14px 16px; overflow-x: auto;
+  }
+  .diffbody pre {
+    margin: 0; font: 400 12px/1.7 var(--mono); color: var(--ink-2);
+    white-space: pre; max-height: 340px; overflow-y: auto;
+  }
+  .diffbody .add { color: var(--ok-text); background: rgba(20,199,154,0.08); display: inline-block; width: 100%; }
+  .diffbody .del { color: var(--bad-text); background: rgba(156,59,36,0.07); display: inline-block; width: 100%; }
+  .diffbody .hunk { color: var(--ink-3); }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .stat {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-card); padding: 18px 20px;
+  }
+  .stat .l {
+    font: 500 10px/1 var(--mono); letter-spacing: 0.16em; color: var(--ink-3);
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .stat .n {
+    font: 600 44px/1 var(--sans); letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .u { font: 400 12px/1.5 var(--mono); color: var(--ink-2); margin-top: 10px; }
+
+  .dist { display: flex; height: 6px; border-radius: 999px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); margin-top: 14px; }
+  .dist .seg { height: 100%; }
+  .dist .seg.ok { background: var(--ok); }
+  .dist .seg.bad { background: #9c3b24; }
+  .dist .seg.warn { background: #d7a04a; }
+
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .filter {
+    font: 500 12px/1 var(--mono); letter-spacing: 0.08em;
+    background: var(--surface); color: var(--ink-2);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 14px; cursor: pointer;
+    transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
+  }
+  .filter:hover { border-color: var(--line-strong); }
+  .filter:active { transform: scale(0.98); }
+  .filter.is-active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .filter:focus-visible { outline: 3px solid #ff5a00; outline-offset: 3px; }
+  .card.is-hidden { display: none; }
+
+  .cards { display: grid; gap: 12px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-card); padding: 20px 22px;
+    animation: rise 0.18s ease-out both;
+  }
+  .card:nth-child(2) { animation-delay: 0.04s; }
+  .card:nth-child(3) { animation-delay: 0.08s; }
+  .card:nth-child(n+4) { animation-delay: 0.12s; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(6px) scale(0.985); }
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card { animation: none; }
+  }
+  .card.VERIFIED { border-left: 3px solid var(--ok); }
+  .card.REFUTED { border-left: 3px solid #9c3b24; background: linear-gradient(0deg, rgba(156,59,36,0.05), rgba(156,59,36,0.05)), var(--surface); }
+  .card.UNVERIFIABLE { border: 1px dashed rgba(215,160,74,0.55); border-left: 3px solid #d7a04a; }
+  .card-head { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+  .cid { font: 500 12px/1 var(--mono); color: var(--ink-3); letter-spacing: 0.06em; }
+  .verdict {
+    display: inline-flex; align-items: center; gap: 7px;
+    font: 500 11px/1 var(--mono); letter-spacing: 0.12em;
+    border-radius: 999px; padding: 5px 11px;
+  }
+  .verdict .dot { width: 7px; height: 7px; border-radius: 999px; }
+  .claim { font-size: 16px; font-weight: 500; text-wrap: pretty; }
+  .lbl {
+    font: 500 10px/1 var(--mono); letter-spacing: 0.16em; color: var(--ink-3);
+    text-transform: uppercase; margin: 14px 0 8px;
+  }
+  .path {
+    display: block; font: 400 13px/1.7 var(--mono); color: var(--ink-2);
+    background: var(--paper); border-left: 2px solid var(--line-strong);
+    border-radius: 0 var(--r-inner) var(--r-inner) 0;
+    padding: 10px 14px; white-space: pre-wrap; word-break: break-word;
+    overflow-x: auto;
+  }
+  .path b { color: var(--ink); font-weight: 600; }
+  .card.REFUTED .path { border-left-color: #9c3b24; }
+  .card.VERIFIED .path { border-left-color: var(--ok); }
+  .card.UNVERIFIABLE .path { border-left-color: #d7a04a; }
+  .rationale { margin: 10px 0 0; color: var(--ink-2); font-size: 15px; max-width: 72ch; }
+  .cmd {
+    font: 500 13px/1 var(--mono); color: var(--ink);
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: 6px; padding: 2px 6px;
+  }
+
+  details.trail { margin-top: 14px; }
+  details.trail summary {
+    list-style: none; cursor: pointer; user-select: none;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    font: 500 12px/1 var(--mono); color: var(--ink-2);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 14px; width: fit-content;
+    transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
+  }
+  details.trail summary::-webkit-details-marker { display: none; }
+  details.trail summary:hover { background: var(--paper); border-color: var(--line-strong); }
+  details.trail summary .chev { transition: transform 0.15s ease-out; color: var(--ink-3); }
+  details.trail[open] summary .chev { transform: rotate(90deg); }
+  details.trail summary b { color: var(--ink); font-weight: 500; }
+  .trail-body { margin-top: 10px; display: grid; gap: 10px; }
+  .ev { border: 1px solid var(--line); border-radius: var(--r-inner); background: var(--paper); }
+  .ev-head {
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    font: 500 11px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 9px 12px; color: var(--ink-3);
+  }
+  .ev-head .act { color: var(--ink); }
+  .ev-head .state-ok { color: var(--ok-text); }
+  .ev-head .state-fail { color: var(--bad-text); }
+  .ev pre {
+    margin: 0; padding: 10px 12px; border-top: 1px solid var(--line);
+    font: 400 12px/1.65 var(--mono); color: var(--ink-2);
+    white-space: pre-wrap; word-break: break-word;
+    max-height: 260px; overflow-y: auto;
+  }
+  .settle {
+    margin: 10px 0 0; font-size: 14px; color: var(--ink-2);
+    border: 1px dashed rgba(215,160,74,0.55); border-radius: var(--r-inner);
+    padding: 8px 12px; background: rgba(215,160,74,0.06); max-width: 72ch;
+  }
+  .settle .settle-l {
+    font: 500 10px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase;
+    color: #8a6420; margin-right: 8px;
+  }
+  .ev-none { font: 400 13px/1.6 var(--mono); color: var(--ink-3); margin: 14px 0 0; }
+
+  .ledger {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-card); padding: 22px 24px; margin-top: 46px;
+  }
+  .ledger p { margin: 0 0 10px; color: var(--ink-2); font-size: 15px; max-width: 70ch; }
+  .ledger p b { color: var(--ink); font-weight: 500; }
+  .ledger code {
+    display: inline-block; font: 500 13px/1 var(--mono); color: var(--ink);
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: 6px; padding: 4px 8px;
+  }
+  .copyrow { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 2px 0 8px; }
+  .copybtn {
+    font: 500 12px/1 var(--mono); background: var(--ink); color: #fff;
+    border: none; border-radius: 6px; padding: 8px 14px; cursor: pointer;
+    transition: transform 0.15s ease-out;
+  }
+  .copybtn:active { transform: scale(0.98); }
+  .copybtn:focus-visible { outline: 3px solid #ff5a00; outline-offset: 3px; }
+
+  @media (max-width: 720px) {
+    h1 { font-size: 32px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .shell { padding: 0 16px 56px; }
+    .card { padding: 16px; }
+    .herozone { margin: 0 -16px; padding: 0 16px 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="wordmark"><span class="tick" aria-hidden="true">✓</span> Claimcheck</div>
+    <div class="runmeta">advanced run · 2026-08-30</div>
+  </header>
+
+  <div class="herozone">
+    <div class="eyebrow" id="main">Proof report</div>
+    <h1>5 verified. 0 refuted. 0 undecidable.</h1>
+    <p class="sub">Every claim about this code change was checked against <b>executed evidence</b>:
+    files read, searches run, and test suites executed inside the repository itself.
+    Nothing below is asserted above the evidence behind it.</p>
+    <div class="receipt">
+      <span>RUN <b>AE4E3</b></span>
+      <span>MODEL <b>openai/gpt-oss-120b</b></span>
+      <span>TOOL CALLS <b>8</b></span>
+      <span>WALL <b>103.1s</b></span>
+      <span>2026-08-30</span>
+    </div>
+  </div>
+
+  <div class="seclabel">The change under review</div>
+  <details class="diffbar">
+    <summary>Read the full diff (3 files, +6 −4)</summary>
+    <div class="diffbody"><pre>diff --git a/REPRODUCTION.md b/REPRODUCTION.md
+index 91c44d4..e0f759c 100644
+--- a/REPRODUCTION.md
++++ b/REPRODUCTION.md
+<span class="hunk">@@ -52,7 +52,7 @@ Create `.env` in the repository root (it is gitignored):</span>
+ CLAIMCHECK_API_KEY=your-key
+ # only if not using OpenAI:
+ # CLAIMCHECK_BASE_URL=https://api.groq.com/openai/v1
+<span class="del">-# CLAIMCHECK_MODEL=llama-3.3-70b-versatile</span>
+<span class="add">+# CLAIMCHECK_MODEL=openai/gpt-oss-120b</span>
+ ```
+ 
+ ```bash
+diff --git a/src/agent.ts b/src/agent.ts
+index bccebbc..358162c 100644
+--- a/src/agent.ts
++++ b/src/agent.ts
+<span class="hunk">@@ -1,13 +1,15 @@</span>
+ import type { UsageSummary } from &quot;./types.js&quot;;
+ 
+ const DEFAULT_BASE_URL = &quot;https://api.openai.com/v1&quot;;
+<span class="del">-const DEFAULT_MODEL = &quot;gpt-4o-mini&quot;;</span>
+<span class="add">+const DEFAULT_MODEL = &quot;openai/gpt-oss-120b&quot;;</span>
+ 
+ // Rough public list prices per 1M tokens; override with CLAIMCHECK_PRICE_IN/OUT.
+ const PRICES: Record&lt;string, [number, number]&gt; = {
+   &quot;gpt-4o-mini&quot;: [0.15, 0.6],
+   &quot;gpt-4o&quot;: [2.5, 10],
+   &quot;gpt-4.1-mini&quot;: [0.4, 1.6],
+<span class="add">+  &quot;openai/gpt-oss-120b&quot;: [0.15, 0.6],</span>
+<span class="add">+  &quot;openai/gpt-oss-20b&quot;: [0.075, 0.3],</span>
+   &quot;llama-3.3-70b-versatile&quot;: [0.59, 0.79],
+   &quot;llama-3.1-8b-instant&quot;: [0.05, 0.08],
+ };
+<span class="hunk">@@ -48,7 +50,7 @@ export class Agent {</span>
+         &quot;CLAIMCHECK_API_KEY is not set. Claimcheck needs any OpenAI-compatible key. &quot; +
+           &quot;Set CLAIMCHECK_BASE_URL and CLAIMCHECK_MODEL if you do not use OpenAI. &quot; +
+           &quot;Free tiers such as Groq or OpenRouter work: create a key, then run &quot; +
+<span class="del">-          &quot;CLAIMCHECK_BASE_URL=https://api.groq.com/openai/v1 CLAIMCHECK_MODEL=llama-3.3-70b-versatile CLAIMCHECK_API_KEY=... &lt;command&gt;&quot;</span>
+<span class="add">+          &quot;CLAIMCHECK_BASE_URL=https://api.groq.com/openai/v1 CLAIMCHECK_MODEL=openai/gpt-oss-120b CLAIMCHECK_API_KEY=... &lt;command&gt;&quot;</span>
+       );
+     }
+   }
+diff --git a/src/cli.ts b/src/cli.ts
+index aecd1e9..10de5d1 100644
+--- a/src/cli.ts
++++ b/src/cli.ts
+<span class="hunk">@@ -179,7 +179,7 @@ function usage(): void {</span>
+ Environment:
+   CLAIMCHECK_API_KEY    required: any OpenAI-compatible API key
+   CLAIMCHECK_BASE_URL   default https://api.openai.com/v1 (Groq: https://api.groq.com/openai/v1)
+<span class="del">-  CLAIMCHECK_MODEL      default gpt-4o-mini (Groq example: llama-3.3-70b-versatile)</span>
+<span class="add">+  CLAIMCHECK_MODEL      default openai/gpt-oss-120b (Groq developer plan)</span>
+ 
+ Commands:
+   verify --repo &lt;path&gt; --claims &quot;&lt;line per claim&gt;&quot; [--claims-file file.json]
+</pre></div>
+  </details>
+  <div class="diffbar" style="margin: 10px 0 26px">
+    <button class="filechip" data-file="REPRODUCTION.md" title="Show REPRODUCTION.md in the diff"><span class="adds">+1</span><span class="dels">−1</span></button>
+    <button class="filechip" data-file="src/agent.ts" title="Show src/agent.ts in the diff"><span class="adds">+4</span><span class="dels">−2</span></button>
+    <button class="filechip" data-file="src/cli.ts" title="Show src/cli.ts in the diff"><span class="adds">+1</span><span class="dels">−1</span></button>
+  </div>
+
+  <div class="stats" role="group" aria-label="Run facts">
+    <div class="stat"><div class="l">Claims checked</div><div class="n">5</div><div class="u">3 verdict classes</div></div>
+    <div class="stat"><div class="l">Evidence actions</div><div class="n">8</div><div class="u">reads · searches · test runs</div></div>
+    <div class="stat"><div class="l">Wall time</div><div class="n">103.1<span style="font-size: 20px">s</span></div><div class="u">end to end</div></div>
+    <div class="stat"><div class="l">Model cost</div><div class="n">$0.00422</div><div class="u">6 model calls</div></div>
+  </div>
+
+  <div class="dist" role="img" aria-label="5 verified, 0 refuted, 0 unverifiable">
+    <div class="seg ok" style="width: 100%" title="5 verified"></div>
+    <div class="seg bad" style="width: 0%" title="0 refuted"></div>
+    <div class="seg warn" style="width: 0%" title="0 unverifiable"></div>
+  </div>
+
+  <div class="seclabel">All claims</div>
+  <div class="filters" role="group" aria-label="Filter claims by verdict">
+    <button class="filter is-active" data-filter="all">All 5</button>
+    <button class="filter" data-filter="VERIFIED">Verified 5</button>
+    <button class="filter" data-filter="REFUTED">Refuted 0</button>
+    <button class="filter" data-filter="UNVERIFIABLE">Undecidable 0</button>
+  </div>
+  <main class="cards">
+    <article class="card VERIFIED" id="C1">
+      <div class="card-head">
+        <span class="cid">01 · C1</span>
+        <span class="verdict" style="color: #0b6e50; background: rgba(20, 199, 154, 0.14)"><span class="dot" style="background: #14c79a"></span>VERIFIED</span>
+        <span class="claim">The sandbox refuses file paths that escape its working directory.</span>
+      </div>
+      <div class="lbl">Evidence</div>
+      <code class="path">Evidence 1 (run_tests) line: &quot;<b>ok 4 - sandbox refuses paths that escape the workdir</b></code>
+      <p class="rationale">The test suite includes a subtest named &quot;sandbox refuses paths that escape the workdir&quot; which passes, confirming the Sandbox.inside method rejects escaping paths.</p>
+      
+      <details class="trail">
+        <summary><span class="chev">▸</span>Full evidence trail <b>2 actions</b> · 2 succeeded</summary>
+        <div class="trail-body">
+          <div class="ev">
+            <div class="ev-head"><span class="act">run_tests</span><span><span class="state-ok">ok</span></span><span>298ms</span></div>
+            <pre>TAP version 13
+# Subtest: parseJsonLoose accepts plain json
+ok 1 - parseJsonLoose accepts plain json
+  ---
+  duration_ms: 2.566458
+  type: 'test'
+  ...
+# Subtest: parseJsonLoose strips code fences and prose
+ok 2 - parseJsonLoose strips code fences and prose
+  ---
+  duration_ms: 0.226917
+  type: 'test'
+  ...
+# Subtest: parseJsonLoose rejects text without an object
+ok 3 - parseJsonLoose rejects text without an object
+  ---
+  duration_ms: 0.490417
+  type: 'test'
+  ...
+# Subtest: sandbox refuses paths that escape the workdir
+ok 4 - sandbox refuses paths that escape the workdir
+  ---
+  duration_ms: 7.080833
+  type: 'test'
+  ...
+# Subtest: total sums item prices
+ok 5 - total sums item prices
+  ---
+  duration_ms: 0.744959
+  type: 'test'
+  ...
+# Subtest: totalWithTax applies rate
+ok 6 - totalWithTax applies rate
+  ---
+  duration_ms: 0.23175
+  type: 'test'
+  ...
+# Subtest: divides numbers
+ok 7 - divides numbers
+  ---
+  duration_ms: 1.055375
+  type: 'test'
+  ...
+# Subtest: returns float for non divisible numbers
+ok 8 - returns float for non divisible numbers
+  ---
+  duration_ms: 0.287791
+  type: 'test'
+  ...
+# Subtest: returns Infinity for division by zero
+not ok 9 - returns Infinity for division by zero
+  ---
+  duration_ms: 0.191708
+  type: 'test'
+  location: '/private/var/folders/2w/hw0shbln62l0fd7c0w2_xx2c0000gn/T/claimcheck-sHECrE/eval/cases/02-tests-pass-false/repo/math.test.js:13:1'
+  failureType: 'testCodeFailure'
+  error: 'division by zero'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    divide (/private/var/folders/2w/hw0shbln62l0fd7c0w2_xx2c0000gn/T/claimcheck-sHECrE/eval/cases/02-tests-pass-false/repo/math.js:3:11)
+    TestContext.&lt;anonymous&gt; (/private/var/folders/2w/hw0shbln62l0fd7c0w2_xx2c0000gn/T/claimcheck-sHECrE/eval/cases/02-tests-pass-false/repo/math.test.js:14:16)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: accepts a normal name
+ok 10 - accepts a normal name
+  ---
+  duration_ms: 1.349083
+  type: 'test'
+  ...
+# Subtest: rejects empty and whitespace only input
+ok 11 - rejects empty and whitespace only input
+  ---
+  duration_ms: 0.11925
+  type: 'test'
+  ...
+# Subtest: rejects names longer than 80 chars
+ok 12 - rejects names longer than 80 chars
+  ---
+  duration_ms: 0.082125
+  type: 'test'
+  ...
+# Subtest: slugifies a title
+ok 13 - slugifies a title
+  ---
+  duration_ms: 1.418875
+  type: 'test'
+  ...
+# Subtest: mean of 1 and 3 is 2
+ok 14 - mean of 1 and 3 is 2
+  ---
+  duration_ms: 0.610041
+  type: 'test'
+  ...
+# Subtest: zero attempts calls back with an error without invoking fn
+ok 15 - zero attempts calls back with an error without invoking fn
+  ---
+  duration_ms: 0.686792
+  type: 'test'
+  ...
+# Subtest: applies a positive credit
+ok 16 - applies a positive credit
+  ---
+  duration_ms: 0.804708
+  type: 'test'
+  ...
+# Subtest: parses three items
+ok 17 - parses three items
+  ---
+  duration_ms: 1.53425
+  type: 'test'
+  ...
+# Subtest: returns one item without commas
+ok 18 - returns one item without commas
+  ---
+  duration_ms: 0.115041
+  type: 'test'
+  ...
+# Subtest: cache stores and returns values
+ok 19 - cache stores and returns values
+  ---
+  duration_ms: 0.951875
+  type: 'test'
+  ...
+# Subtest: loadUser returns a user object
+ok 20 - loadUser returns a user object
+  ---
+  duration_ms: 1.721167
+  type: 'test'
+  ...
+# Subtest: decorate marks user active
+ok 21 - decorate marks user active
+  ---
+  duration_ms: 0.312916
+  type: 'test'
+  ...
+# Subtest: drain processes pushed jobs in order
+ok 22 - drain processes pushed jobs in order
+  ---
+  duration_ms: 1.891125
+  type: 'test'
+  ...
+# Subtest: size reflects pushes
+ok 23 - size reflects pushes
+  ---
+  duration_ms: 0.275416
+  type: 'test'
+  ...
+# node:internal/modules/esm/resolve:275
+#     throw new ERR_MODULE_NOT_FOUND(
+#           ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/private/var/folders/2w/hw0shbln62l0fd7c0w2_xx2c0000gn/T/claimcheck-sHECrE/src/agent.js' imported from /private/var/folders/2w/hw0shbln62l0fd7c0w2_xx2c0000gn/T/claimcheck-sHECrE/src/internal/units.test.ts
+#     at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+#     at moduleResolve (node:internal/modules/esm/resolve:861:10)
+#     at defaultResolve (node:internal/modules/esm/resolve:985:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:747:20)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:724:38)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:320:38)
+#     at ModuleJob._link (node:internal/modules/esm/module_job:182:49) {
+#   code: 'ERR_MODULE_NOT_FOUND',
+#   url: 'file:///private/var/folders/2w/hw0shbln62l0fd7c0w2_xx2c0000gn/T/claimcheck-sHECrE/src/agent.js'
+# }
+# Node.js v22.23.1
+# Subtest: src/internal/units.test.ts
+not ok 13 - src/internal/units.test.ts
+  ---
+  duration_ms: 115.4765
+  type: 'test'
+  location: '/private/var/folders/2w/hw0shbln62l0fd7c0w2_xx2c0000gn/T/claimcheck-sHECrE/src/internal/units.test.ts:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 22
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 250.273042
+
+(exit code 1)</pre>
+          </div>
+          <div class="ev">
+            <div class="ev-head"><span class="act">read_file src/sandbox.ts</span><span><span class="state-ok">ok</span></span><span>0ms</span></div>
+            <pre>import { spawn } from &quot;node:child_process&quot;;
+import { cp, mkdtemp, readdir, readFile, rm, stat } from &quot;node:fs/promises&quot;;
+import { tmpdir } from &quot;node:os&quot;;
+import { join, resolve, dirname } from &quot;node:path&quot;;
+import type { EvidenceAction, EvidenceItem } from &quot;./types.js&quot;;
+
+const MAX_OUTPUT = 6000;
+const COMMAND_TIMEOUT_MS = 30_000;
+const ALLOWED_BINARIES = new Set([&quot;node&quot;, &quot;git&quot;]);
+
+export class Sandbox {
+  readonly dir: string;
+  private cleaned = false;
+
+  /** Prefer Sandbox.fromRepo; direct construction exists for unit tests. */
+  constructor(dir: string) {
+    this.dir = dir;
+  }
+
+  static async fromRepo(repoPath: string): Promise&lt;Sandbox&gt; {
+    const st = await stat(repoPath);
+    if (!st.isDirectory()) throw new Error(`repo path is not a directory: ${repoPath}`);
+    const dir = await mkdtemp(join(tmpdir(), &quot;claimcheck-&quot;));
+    await cp(repoPath, dir, { recursive: true, filter: (src) =&gt; !src.includes(&quot;.git&quot;) ? true : src.endsWith(&quot;.git&quot;) ? false : true });
+    // Keep git history when present: copy .git separately if it exists.
+    try {
+      await cp(join(repoPath, &quot;.git&quot;), join(dir, &quot;.git&quot;), { recursive: true });
+    } catch {
+      // No git history in source repo; git tools will report that honestly.
+    }
+    return new Sandbox(dir);
+  }
+
+  async cleanup(): Promise&lt;void&gt; {
+    if (this.cleaned) return;
+    this.cleaned = true;
+    await rm(this.dir, { recursive: true, force: true });
+  }
+
+  /** Resolve a path inside the sandbox, refusing escapes. */
+  inside(relPath: string): string {
+    const abs = resolve(this.dir, relPath);
+    if (abs !== this.dir &amp;&amp; !abs.startsWith(this.dir + &quot;/&quot;)) {
+      throw new Error(`path escapes sandbox: ${relPath}`);
+    }
+    return abs;
+  }
+
+  async readFile(path: string): Promise&lt;string&gt; {
+    const abs = this.inside(path);
+    const st = await stat(abs);
+    if (st.size &gt; 200_000) {
+      return (await readFile(abs, &quot;utf8&quot;)).slice(0, MAX_OUTPUT) + `\n... truncated (file is ${st.size} bytes)`;
+    }
+    return (await readFile(abs, &quot;utf8&quot;)).slice(0, MAX_OUTPUT);
+  }
+
+  async search(pattern: string, regex: boolean): Promise&lt;string&gt; {
+    const results: string[] = [];
+    const files = await this.walkFiles();
+    const flags = &quot;m&quot; + (RegexSafety(pattern) ? &quot;i&quot; : &quot;&quot;);
+    const re = RegexSafety(pattern)
+      ? new RegExp(pattern, flags)
+      : null;
+    const lower = pattern.toLowerCase();
+    for (const file of files) {
+      if (file.includes(&quot;node_modules/&quot;) || file.includes(&quot;.git/&quot;)) continue;
+      const content = await this.readFile(file);
+      const lines = content.split(&quot;\n&quot;);
+      lines.forEach((line, i) =&gt; {
+        const hit = re ? re.test(line) : line.toLowerCase().includes(lower);
+        if (hit) results.push(`${file}:${i + 1}: ${line.trim().slice(0, 200)}`);
+      });
+      if (results.length &gt; 200) break;
+    }
+    return results.slice(0, 200).join(&quot;\n&quot;) || &quot;(no matches)&quot;;
+  }
+
+  async listTests(): Promise&lt;string&gt; {
+    const files = (await this.walkFiles()).filter(
+      (f) =&gt; /\.(test|spec)\.[cm]?[jt]s$/.test(f) || /(^|\/)tests?\//.test(f),
+    );
+    return files.join(&quot;\n&quot;) || &quot;(no test files found)&quot;;
+  }
+
+  async gitLog(maxEntries: number): Promise&lt;string&gt; {
+    return this.run(&quot;git&quot;, [&quot;log&quot;, `-${maxEntries}`, &quot;--stat&quot;, &quot;--format=medium&quot;]);
+  }
+
+  async gitDiff(ref?: string): Promise&lt;string&gt; {
+    const args = ref ? [&quot;diff&quot;, `${ref}...HEAD`] : [&quot;diff&quot;, &quot;HEAD~1&quot;, &quot;HEAD&quot;];
+    return this.run(&quot;git&quot;, args);
+  }
+
+  async runTests(filter?: string): Promise&lt;string&gt; {
+    const args = [&quot;--test&quot;];
+    if (filter) args.push(filter);
+    return this.run(&quot;node&quot;, args, { timeoutMs: 60_000 });
+  }
+
+  async runScript(script: string, args: string[] = []): Promise&lt;string&gt; {
+    const abs = this.inside(script);
+    return this.run(&quot;node&quot;, [abs, ...args], { timeoutMs: 30_000 });
+  }
+
+  async execute(action: EvidenceAction): Promise&lt;EvidenceItem&gt; {
+    const started = performance.now();
+    try {
+      let output: string;
+      switch (action.action) {
+        case &quot;read_file&quot;:
+          output = await this.readFile(action.path);
+          break;
+        case &quot;search&quot;:
+          output = await this.search(action.pattern, action.regex ?? false);
+          break;
+        case &quot;list_tests&quot;:
+          output = await this.listTests();
+          break;
+        case &quot;run_tests&quot;:
+          output = await this.runTests(action.filter);
+          break;
+        case &quot;git_log&quot;:
+          output = await this.gitLog(action.maxEntries ?? 5);
+          break;
+        case &quot;git_diff&quot;:
+          output = await this.gitDiff(action.ref);
+          break;
+        case &quot;run_script&quot;:
+          output = await this.runScript(action.script, action.args);
+          break;
+        default:
+          output = `unsupported action: ${(action as EvidenceAction).action}`;
+      }
+      return {
+        action,
+        ok: true,
+        output: clip(output, MAX_OUTPUT),
+        durationMs: Math.round(performance.now() - started),
+      };
+    } catch (err) {
+      return {
+        action,
+        ok: false,
+        output: clip(`ERROR: ${(err as Error).message}`, MAX_OUTPUT),
+        durationMs: Math.round(performance.now() - started),
+      };
+    }
+  }
+
+  async walkFiles(): Promise&lt;string[]&gt; {
+    const out: string[] = [];
+    const walk = async (rel: string) =&gt; {
+      const entries = await readdir(join(this.dir, rel), { withFileTypes: true }).catch(() =&gt; []);
+      for (const e of entries) {
+        if (e.name === &quot;.git&quot; || e.name === &quot;node_modules&quot;) continue;
+        const relPath = rel ? `${rel}/${e.name}` : e.name;
+        if (e.isDirectory()) await walk(relPath);
+        else out.push(relPath);
+      }
+    };
+    await walk(&quot;&quot;);
+    return out.sort();
+  }
+
+  private async run(
+    bin: string,
+    args: string[],
+    opts: { timeoutMs?: number } = {},
+  ): Promise&lt;string&gt; {
+    if (!ALLOWED_BINARIES.has(bin)) throw new Error(`binary not allowed: ${bin}`);
+    return new Promise&lt;string&gt;((resolvePromise, reject) =&gt; {
+      const child = spawn(bin, args, {
+        cwd: t</pre>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article class="card VERIFIED" id="C2">
+      <div class="card-head">
+        <span class="cid">02 · C2</span>
+        <span class="verdict" style="color: #0b6e50; background: rgba(20, 199, 154, 0.14)"><span class="dot" style="background: #14c79a"></span>VERIFIED</span>
+        <span class="claim">Claimcheck has no runtime dependencies; only TypeScript tooling in devDependencies.</span>
+      </div>
+      <div class="lbl">Evidence</div>
+      <code class="path">package.json shows only devDependencies (typescript, @types/node) and no &quot;<b>dependencies</b> field</code>
+      <p class="rationale">The manifest lists only TypeScript tooling under devDependencies and lacks any runtime dependencies, directly confirming the claim.</p>
+      
+      <details class="trail">
+        <summary><span class="chev">▸</span>Full evidence trail <b>1 action</b> · 1 succeeded</summary>
+        <div class="trail-body">
+          <div class="ev">
+            <div class="ev-head"><span class="act">read_file package.json</span><span><span class="state-ok">ok</span></span><span>1ms</span></div>
+            <pre>{
+  &quot;name&quot;: &quot;claimcheck&quot;,
+  &quot;version&quot;: &quot;0.1.0&quot;,
+  &quot;description&quot;: &quot;Verifies claims about a code change against executable evidence&quot;,
+  &quot;type&quot;: &quot;module&quot;,
+  &quot;private&quot;: true,
+  &quot;bin&quot;: {
+    &quot;claimcheck&quot;: &quot;dist/cli.js&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;build&quot;: &quot;tsc -p tsconfig.json&quot;,
+    &quot;verify&quot;: &quot;node dist/cli.js verify&quot;,
+    &quot;eval&quot;: &quot;node dist/cli.js eval&quot;,
+    &quot;report&quot;: &quot;node dist/cli.js report&quot;,
+    &quot;test&quot;: &quot;node --test \&quot;dist/internal/*.test.js\&quot;&quot;
+  },
+  &quot;engines&quot;: {
+    &quot;node&quot;: &quot;&gt;=20&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;typescript&quot;: &quot;^5.6.0&quot;,
+    &quot;@types/node&quot;: &quot;^22.0.0&quot;
+  }
+}</pre>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article class="card VERIFIED" id="C3">
+      <div class="card-head">
+        <span class="cid">03 · C3</span>
+        <span class="verdict" style="color: #0b6e50; background: rgba(20, 199, 154, 0.14)"><span class="dot" style="background: #14c79a"></span>VERIFIED</span>
+        <span class="claim">The unit tests cover JSON parse hardening and sandbox path containment.</span>
+      </div>
+      <div class="lbl">Evidence</div>
+      <code class="path">src/internal/units.test.ts (tests for parseJsonLoose and sandbox path containment)</code>
+      <p class="rationale">The test file defines parseJsonLoose acceptance, stripping, rejection cases and a sandbox path escape test, and the test run output shows all those subtests passing.</p>
+      
+      <details class="trail">
+        <summary><span class="chev">▸</span>Full evidence trail <b>3 actions</b> · 3 succeeded</summary>
+        <div class="trail-body">
+          <div class="ev">
+            <div class="ev-head"><span class="act">run_tests</span><span><span class="state-ok">ok</span></span><span>220ms</span></div>
+            <pre>TAP version 13
+# Subtest: parseJsonLoose accepts plain json
+ok 1 - parseJsonLoose accepts plain json
+  ---
+  duration_ms: 1.741958
+  type: 'test'
+  ...
+# Subtest: parseJsonLoose strips code fences and prose
+ok 2 - parseJsonLoose strips code fences and prose
+  ---
+  duration_ms: 0.179625
+  type: 'test'
+  ...
+# Subtest: parseJsonLoose rejects text without an object
+ok 3 - parseJsonLoose rejects text without an object
+  ---
+  duration_ms: 0.136125
+  type: 'test'
+  ...
+# Subtest: sandbox refuses paths that escape the workdir
+ok 4 - sandbox refuses paths that escape the workdir
+  ---
+  duration_ms: 5.914292
+  type: 'test'
+  ...
+# Subtest: total sums item prices
+ok 5 - total sums item prices
+  ---
+  duration_ms: 0.9525
+  type: 'test'
+  ...
+# Subtest: totalWithTax applies rate
+ok 6 - totalWithTax applies rate
+  ---
+  duration_ms: 0.179459
+  type: 'test'
+  ...
+# Subtest: divides numbers
+ok 7 - divides numbers
+  ---
+  duration_ms: 1.055333
+  type: 'test'
+  ...
+# Subtest: returns float for non divisible numbers
+ok 8 - returns float for non divisible numbers
+  ---
+  duration_ms: 0.098541
+  type: 'test'
+  ...
+# Subtest: returns Infinity for division by zero
+not ok 9 - returns Infinity for division by zero
+  ---
+  duration_ms: 0.100667
+  type: 'test'
+  location: '/private/var/folders/2w/hw0shbln62l0fd7c0w2_xx2c0000gn/T/claimcheck-sHECrE/eval/cases/02-tests-pass-false/repo/math.test.js:13:1'
+  failureType: 'testCodeFailure'
+  error: 'division by zero'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    divide (/private/var/folders/2w/hw0shbln62l0fd7c0w2_xx2c0000gn/T/claimcheck-sHECrE/eval/cases/02-tests-pass-false/repo/math.js:3:11)
+    TestContext.&lt;anonymous&gt; (/private/var/folders/2w/hw0shbln62l0fd7c0w2_xx2c0000gn/T/claimcheck-sHECrE/eval/cases/02-tests-pass-false/repo/math.test.js:14:16)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: accepts a normal name
+ok 10 - accepts a normal name
+  ---
+  duration_ms: 1.768041
+  type: 'test'
+  ...
+# Subtest: rejects empty and whitespace only input
+ok 11 - rejects empty and whitespace only input
+  ---
+  duration_ms: 0.197959
+  type: 'test'
+  ...
+# Subtest: rejects names longer than 80 chars
+ok 12 - rejects names longer than 80 chars
+  ---
+  duration_ms: 0.125667
+  type: 'test'
+  ...
+# Subtest: slugifies a title
+ok 13 - slugifies a title
+  ---
+  duration_ms: 0.568209
+  type: 'test'
+  ...
+# Subtest: mean of 1 and 3 is 2
+ok 14 - mean of 1 and 3 is 2
+  ---
+  duration_ms: 0.508375
+  type: 'test'
+  ...
+# Subtest: zero attempts calls back with an error without invoking fn
+ok 15 - zero attempts calls back with an error without invoking fn
+  ---
+  duration_ms: 0.52675
+  type: 'test'
+  ...
+# Subtest: applies a positive credit
+ok 16 - applies a positive credit
+  ---
+  duration_ms: 0.525583
+  type: 'test'
+  ...
+# Subtest: parses three items
+ok 17 - parses three items
+  ---
+  duration_ms: 1.044041
+  type: 'test'
+  ...
+# Subtest: returns one item without commas
+ok 18 - returns one item without commas
+  ---
+  duration_ms: 0.086792
+  type: 'test'
+  ...
+# Subtest: cache stores and returns values
+ok 19 - cache stores and returns values
+  ---
+  duration_ms: 0.567209
+  type: 'test'
+  ...
+# Subtest: loadUser returns a user object
+ok 20 - loadUser returns a user object
+  ---
+  duration_ms: 0.552125
+  type: 'test'
+  ...
+# Subtest: decorate marks user active
+ok 21 - decorate marks user active
+  ---
+  duration_ms: 0.092417
+  type: 'test'
+  ...
+# Subtest: drain processes pushed jobs in order
+ok 22 - drain processes pushed jobs in order
+  ---
+  duration_ms: 1.04575
+  type: 'test'
+  ...
+# Subtest: size reflects pushes
+ok 23 - size reflects pushes
+  ---
+  duration_ms: 0.107208
+  type: 'test'
+  ...
+# node:internal/modules/esm/resolve:275
+#     throw new ERR_MODULE_NOT_FOUND(
+#           ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/private/var/folders/2w/hw0shbln62l0fd7c0w2_xx2c0000gn/T/claimcheck-sHECrE/src/agent.js' imported from /private/var/folders/2w/hw0shbln62l0fd7c0w2_xx2c0000gn/T/claimcheck-sHECrE/src/internal/units.test.ts
+#     at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+#     at moduleResolve (node:internal/modules/esm/resolve:861:10)
+#     at defaultResolve (node:internal/modules/esm/resolve:985:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:747:20)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:724:38)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:320:38)
+#     at ModuleJob._link (node:internal/modules/esm/module_job:182:49) {
+#   code: 'ERR_MODULE_NOT_FOUND',
+#   url: 'file:///private/var/folders/2w/hw0shbln62l0fd7c0w2_xx2c0000gn/T/claimcheck-sHECrE/src/agent.js'
+# }
+# Node.js v22.23.1
+# Subtest: src/internal/units.test.ts
+not ok 13 - src/internal/units.test.ts
+  ---
+  duration_ms: 79.860416
+  type: 'test'
+  location: '/private/var/folders/2w/hw0shbln62l0fd7c0w2_xx2c0000gn/T/claimcheck-sHECrE/src/internal/units.test.ts:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 22
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 174.551584
+
+(exit code 1)</pre>
+          </div>
+          <div class="ev">
+            <div class="ev-head"><span class="act">list_tests</span><span><span class="state-ok">ok</span></span><span>3ms</span></div>
+            <pre>dist/internal/units.test.js
+eval/cases/01-tests-pass-true/repo/cart.test.js
+eval/cases/02-tests-pass-false/repo/math.test.js
+eval/cases/03-coverage-true/repo/validator.test.js
+eval/cases/04-coverage-false/repo/slug.test.js
+eval/cases/05-api-preserved-true/repo/stats.test.js
+eval/cases/07-edge-true/repo/retry.test.js
+eval/cases/08-edge-false/repo/ledger.test.js
+eval/cases/09-perf-unverifiable/repo/parse.test.js
+eval/cases/13-hard-mixed/repo/cache.test.js
+eval/cases/13-hard-mixed/repo/users.test.js
+eval/cases/14-holdout/repo/jobq.test.js
+src/internal/units.test.ts</pre>
+          </div>
+          <div class="ev">
+            <div class="ev-head"><span class="act">read_file src/internal/units.test.ts</span><span><span class="state-ok">ok</span></span><span>0ms</span></div>
+            <pre>import test from &quot;node:test&quot;;
+import assert from &quot;node:assert&quot;;
+import { parseJsonLoose } from &quot;../agent.js&quot;;
+import { Sandbox } from &quot;../sandbox.js&quot;;
+import { mkdtemp, writeFile } from &quot;node:fs/promises&quot;;
+import { tmpdir } from &quot;node:os&quot;;
+import { join } from &quot;node:path&quot;;
+
+test(&quot;parseJsonLoose accepts plain json&quot;, () =&gt; {
+  assert.deepEqual(parseJsonLoose('{&quot;a&quot;:1}'), { a: 1 });
+});
+
+test(&quot;parseJsonLoose strips code fences and prose&quot;, () =&gt; {
+  assert.deepEqual(parseJsonLoose('```json\n{&quot;a&quot;: [2]}\n```'), { a: [2] });
+  assert.deepEqual(parseJsonLoose('Sure! {&quot;a&quot;: 1} hope this helps'), { a: 1 });
+});
+
+test(&quot;parseJsonLoose rejects text without an object&quot;, () =&gt; {
+  assert.throws(() =&gt; parseJsonLoose(&quot;no json here&quot;));
+});
+
+test(&quot;sandbox refuses paths that escape the workdir&quot;, async () =&gt; {
+  const dir = await mkdtemp(join(tmpdir(), &quot;cc-unit-&quot;));
+  await writeFile(join(dir, &quot;a.txt&quot;), &quot;x&quot;);
+  const sb = new Sandbox(dir);
+  assert.equal(sb.inside(&quot;a.txt&quot;), join(dir, &quot;a.txt&quot;));
+  assert.throws(() =&gt; sb.inside(&quot;../outside.txt&quot;));
+  assert.throws(() =&gt; sb.inside(&quot;sub/../../up.txt&quot;));
+});</pre>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article class="card VERIFIED" id="C4">
+      <div class="card-head">
+        <span class="cid">04 · C4</span>
+        <span class="verdict" style="color: #0b6e50; background: rgba(20, 199, 154, 0.14)"><span class="dot" style="background: #14c79a"></span>VERIFIED</span>
+        <span class="claim">The eval corpus is regenerated deterministically by a single script.</span>
+      </div>
+      <div class="lbl">Evidence</div>
+      <code class="path">eval/build-cases.mjs:1-12</code>
+      <p class="rationale">The script’s comment and fixed GIT_AUTHOR_DATE/COMMITTER_DATE show it deterministically rebuilds the eval cases in a single script.</p>
+      
+      <details class="trail">
+        <summary><span class="chev">▸</span>Full evidence trail <b>1 action</b> · 1 succeeded</summary>
+        <div class="trail-body">
+          <div class="ev">
+            <div class="ev-head"><span class="act">read_file eval/build-cases.mjs</span><span><span class="state-ok">ok</span></span><span>1ms</span></div>
+            <pre>#!/usr/bin/env node
+// Rebuilds every eval case repo deterministically from the specs below.
+// Each case becomes eval/cases/&lt;id&gt;/repo (git repo, 2 commits: &quot;before&quot; then &quot;change&quot;)
+// plus case.json with claims and ground truth. Run: node eval/build-cases.mjs
+import { mkdir, rm, writeFile } from &quot;node:fs/promises&quot;;
+import { join } from &quot;node:path&quot;;
+import { spawnSync } from &quot;node:child_process&quot;;
+
+const GIT_ENV = {
+  ...process.env,
+  GIT_AUTHOR_NAME: &quot;Claimcheck Cases&quot;,
+  GIT_AUTHOR_EMAIL: &quot;cases@claimcheck.local&quot;,
+  GIT_COMMITTER_NAME: &quot;Claimcheck Cases&quot;,
+  GIT_COMMITTER_EMAIL: &quot;cases@claimcheck.local&quot;,
+  GIT_AUTHOR_DATE: &quot;2026-08-30T09:00:00Z&quot;,
+  GIT_COMMITTER_DATE: &quot;2026-08-30T09:00:00Z&quot;,
+};
+
+const CASES = [
+  caseSpec({
+    id: &quot;01-tests-pass-true&quot;,
+    description: &quot;Feature added with passing tests; claims that tests pass&quot;,
+    before: {
+      &quot;cart.js&quot;: `function addItem(cart, sku, price) {\n  cart.push({ sku, price });\n  return cart;\n}\n\nfunction total(cart) {\n  return cart.reduce((sum, item) =&gt; sum + item.price, 0);\n}\n\nmodule.exports = { addItem, total };\n`,
+      &quot;cart.test.js&quot;: `const test = require(&quot;node:test&quot;);\nconst assert = require(&quot;node:assert&quot;);\nconst { addItem, total } = require(&quot;./cart.js&quot;);\n\ntest(&quot;total sums item prices&quot;, () =&gt; {\n  const cart = [];\n  addItem(cart, &quot;a&quot;, 3);\n  addItem(cart, &quot;b&quot;, 4);\n  assert.equal(total(cart), 7);\n});\n`,
+    },
+    change: {
+      &quot;cart.js&quot;: `function addItem(cart, sku, price) {\n  cart.push({ sku, price });\n  return cart;\n}\n\nfunction total(cart) {\n  return cart.reduce((sum, item) =&gt; sum + item.price, 0);\n}\n\nfunction totalWithTax(cart, rate) {\n  return total(cart) * (1 + rate);\n}\n\nmodule.exports = { addItem, total, totalWithTax };\n`,
+      &quot;cart.test.js&quot;: `const test = require(&quot;node:test&quot;);\nconst assert = require(&quot;node:assert&quot;);\nconst { addItem, total, totalWithTax } = require(&quot;./cart.js&quot;);\n\ntest(&quot;total sums item prices&quot;, () =&gt; {\n  const cart = [];\n  addItem(cart, &quot;a&quot;, 3);\n  addItem(cart, &quot;b&quot;, 4);\n  assert.equal(total(cart), 7);\n});\n\ntest(&quot;totalWithTax applies rate&quot;, () =&gt; {\n  const cart = [];\n  addItem(cart, &quot;a&quot;, 100);\n  assert.equal(totalWithTax(cart, 0.2), 120);\n});\n`,
+    },
+    commitMessage: &quot;feat: add totalWithTax helper with test&quot;,
+    claims: [
+      { id: &quot;C1&quot;, text: &quot;All tests pass after this change.&quot; },
+      { id: &quot;C2&quot;, text: &quot;The totalWithTax function is exported from cart.js.&quot; },
+    ],
+    groundTruth: {
+      C1: { verdict: &quot;VERIFIED&quot;, note: &quot;node --test passes both tests.&quot; },
+      C2: { verdict: &quot;VERIFIED&quot;, note: &quot;module.exports includes totalWithTax.&quot; },
+    },
+  }),
+
+  caseSpec({
+    id: &quot;02-tests-pass-false&quot;,
+    description: &quot;A failing test is present; claim says all tests pass&quot;,
+    before: {
+      &quot;math.js&quot;: `function divide(a, b) {\n  return a / b;\n}\n\nmodule.exports = { divide };\n`,
+    },
+    change: {
+      &quot;math.js&quot;: `function divide(a, b) {\n  if (b === 0) {\n    throw new Error(&quot;division by zero&quot;);\n  }\n  return a / b;\n}\n\nmodule.exports = { divide };\n`,
+      &quot;math.test.js&quot;: `const test = require(&quot;node:test&quot;);\nconst assert = require(&quot;node:assert&quot;);\nconst { divide } = require(&quot;./math.js&quot;);\n\ntest(&quot;divides numbers&quot;, () =&gt; {\n  assert.equal(divide(10, 2), 5);\n});\n\ntest(&quot;returns float for non divisible numbers&quot;, () =&gt; {\n  assert.equal(divide(10, 4), 2.5);\n});\n\ntest(&quot;returns Infinity for division by zero&quot;, () =&gt; {\n  assert.equal(divide(10, 0), Infinity);\n});\n`,
+    },
+    commitMessage: &quot;feat: guard division by zero, add tests&quot;,
+    claims: [
+      { id: &quot;C1&quot;, text: &quot;All tests pass after this change.&quot; },
+      { id: &quot;C2&quot;, text: &quot;Division by zero now throws an error instead of returning Infinity.&quot; },
+    ],
+    groundTruth: {
+      C1: { verdict: &quot;REFUTED&quot;, note: &quot;the third test expects Infinity but the code now throws.&quot; },
+      C2: { verdict: &quot;VERIFIED&quot;, note: &quot;guard throws Error when b is 0.&quot; },
+    },
+  }),
+
+  caseSpec({
+    id: &quot;03-coverage-true&quot;,
+    description: &quot;Empty input really is covered by a test that exercises it&quot;,
+    before: {
+      &quot;validator.js&quot;: `function validateName(name) {\n  if (typeof name !== &quot;string&quot; || name.length === 0) {\n    return { ok: false, error: &quot;name required&quot; };\n  }\n  return { ok: true };\n}\n\nmodule.exports = { validateName };\n`,
+    },
+    change: {
+      &quot;validator.js&quot;: `function validateName(name) {\n  if (typeof name !== &quot;string&quot; || name.trim().length === 0) {\n    return { ok: false, error: &quot;name required&quot; };\n  }\n  if (name.length &gt; 80) {\n    return { ok: false, error: &quot;name too long&quot; };\n  }\n  return { ok: true };\n}\n\nmodule.exports = { validateName };\n`,
+      &quot;validator.test.js&quot;: `const test = require(&quot;node:test&quot;);\nconst assert = require(&quot;node:assert&quot;);\nconst { validateName } = require(&quot;./validator.js&quot;);\n\ntest(&quot;accepts a normal name&quot;, () =&gt; {\n  assert.deepEqual(validateName(&quot;Ada&quot;), { ok: true });\n});\n\ntest(&quot;rejects empty and whitespace only input&quot;, () =&gt; {\n  assert.equal(validateName(&quot;&quot;).ok, false);\n  assert.equal(validateName(&quot;   &quot;).ok, false);\n});\n\ntest(&quot;rejects names longer than 80 chars&quot;, () =&gt; {\n  assert.equal(validateName(&quot;x&quot;.repeat(81)).error, &quot;name too long&quot;);\n});\n`,
+    },
+    commitMessage: &quot;feat: trim names and enforce max length&quot;,
+    claims: [
+      { id: &quot;C1&quot;, text: &quot;Empty input is covered by the tests.&quot; },
+      { id: &quot;C2&quot;, text: &quot;The validator returns an error object for whitespace only input.&quot; },
+    ],
+    groundTruth: {
+      C1: { verdict: &quot;VERIFIED&quot;, note: &quot;second test calls validateName with empty and whitespace strings.&quot; },
+      C2: { verdict: &quot;VERIFIED&quot;, note: &quot;trim().length === 0 returns the error object.&quot; },
+    },
+  }),
+
+  caseSpec({
+    id: &quot;04-coverage-false&quot;,
+    description: &quot;Code handles empty input but no test ever exercises it&quot;,
+    before: {
+      &quot;slug.js&quot;: `function slugify(text) {\n  return text.toLowerCase().replace(/[^a-z0-9]+/g, &quot;-&quot;);\n}\n\nmodule.exports = { slugify };\n`,
+    },
+    change: {
+      &quot;slug.js&quot;: `function slugify(te</pre>
+          </div>
+        </div>
+      </details>
+    </article>
+    <article class="card VERIFIED" id="C5">
+      <div class="card-head">
+        <span class="cid">05 · C5</span>
+        <span class="verdict" style="color: #0b6e50; background: rgba(20, 199, 154, 0.14)"><span class="dot" style="background: #14c79a"></span>VERIFIED</span>
+        <span class="claim">The HTML report renders without loading any external resource.</span>
+      </div>
+      <div class="lbl">Evidence</div>
+      <code class="path">Evidence 1 (read_file) – renderHtmlReport returns an HTML string that contains only a data‑URI icon (&lt;link rel=&quot;<b>icon</b> href=&quot;<b>data:image/svg+xml,…</b>&gt;) and no &lt;link&gt;, &lt;script&gt;, or external URL references</code>
+      <p class="rationale">The generated HTML embeds all resources (CSS, icon) inline, so rendering the report requires no network fetches.</p>
+      
+      <details class="trail">
+        <summary><span class="chev">▸</span>Full evidence trail <b>1 action</b> · 1 succeeded</summary>
+        <div class="trail-body">
+          <div class="ev">
+            <div class="ev-head"><span class="act">read_file src/report.ts</span><span><span class="state-ok">ok</span></span><span>1ms</span></div>
+            <pre>import type { ClaimResult, EvidenceAction, EvidenceItem, RunReport, Verdict } from &quot;./types.js&quot;;
+
+// Mirror: winsznx/metrx /proof (metrx.pages.dev/proof), SEEN Aug 30 2026. Warm paper,
+// white hairline cards, uppercase mono micro-labels, big stat numerals, tri-state
+// verdict accents (bot green / clay / amber), claim-ledger footer. v5 authored layer:
+// the change under review (real diff with file chips), verdict-weighted cards,
+// run receipt serial, decisive-evidence emphasis, canvas texture. Zero network.
+
+const VERDICT = {
+  VERIFIED: { text: &quot;#0b6e50&quot;, soft: &quot;rgba(20, 199, 154, 0.14)&quot;, dot: &quot;#14c79a&quot; },
+  REFUTED: { text: &quot;#9c3b24&quot;, soft: &quot;rgba(156, 59, 36, 0.10)&quot;, dot: &quot;#9c3b24&quot; },
+  UNVERIFIABLE: { text: &quot;#8a6420&quot;, soft: &quot;rgba(215, 160, 74, 0.16)&quot;, dot: &quot;#d7a04a&quot; },
+} as const;
+
+export function renderHtmlReport(report: RunReport): string {
+  const counts = countVerdicts(report.claims);
+  const cards = report.claims.map((c, i) =&gt; card(c, i)).join(&quot;\n&quot;);
+  const headline = `${counts.VERIFIED} verified. ${counts.REFUTED} refuted. ${counts.UNVERIFIABLE} undecidable.`;
+  const diffStats = diffStatsOf(report.diff);
+  const evidenceActions = report.claims.reduce((a, c) =&gt; a + c.evidence.length, 0);
+  const description = `Every claim about this code change was checked against executed evidence. ${headline} Nothing is asserted above the evidence behind it.`;
+
+  const claimsBody =
+    counts.total === 0
+      ? `    &lt;article class=&quot;card&quot;&gt;
+      &lt;div class=&quot;card-head&quot;&gt;&lt;span class=&quot;claim&quot;&gt;No claims were checked.&lt;/span&gt;&lt;/div&gt;
+      &lt;p class=&quot;rationale&quot;&gt;Pass a claims file to verify a change: &lt;code class=&quot;cmd&quot;&gt;claimcheck verify --repo . --claims-file claims.md&lt;/code&gt;&lt;/p&gt;
+    &lt;/article&gt;`
+      : cards;
+
+  return `&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Claimcheck report · run ${runId(report)}&lt;/title&gt;
+&lt;meta name=&quot;description&quot; content=&quot;${escapeHtml(description)}&quot;&gt;
+&lt;meta name=&quot;theme-color&quot; content=&quot;#f7f1e8&quot;&gt;
+&lt;meta property=&quot;og:type&quot; content=&quot;website&quot;&gt;
+&lt;meta property=&quot;og:title&quot; content=&quot;Claimcheck report · run ${runId(report)}&quot;&gt;
+&lt;meta property=&quot;og:description&quot; content=&quot;${escapeHtml(description)}&quot;&gt;
+&lt;meta name=&quot;twitter:card&quot; content=&quot;summary&quot;&gt;
+&lt;link rel=&quot;icon&quot; href=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23141311'/%3E%3Cpath d='M8.5 10.5h5' stroke='%2314c79a' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M19 8l5 5m0-5l-5 5' stroke='%23ee6f6f' stroke-width='2.6' stroke-linecap='round'/%3E%3Cpath d='M8.5 20h5' stroke='%235ec98c' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M21.5 17.5c0-1.5 1.3-2.5 2.8-2.5 1.6 0 2.7 1 2.7 2.4 0 1.9-2.6 2-2.6 3.8' stroke='%23d9a83e' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='24.3' cy='24.6' r='1.4' fill='%23d9a83e'/%3E%3Cpath d='M8.5 24.5h5' stroke='%23eab308' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E&quot;&gt;
+&lt;style&gt;
+  :root {
+    --paper: #f7f1e8;
+    --surface: #fffdf9;
+    --line: rgba(20, 19, 17, 0.10);
+    --line-strong: rgba(20, 19, 17, 0.22);
+    --ink: #141311;
+    --ink-2: #4b5563;
+    --ink-3: #6f675e;
+    --mono: &quot;IBM Plex Mono&quot;, ui-monospace, &quot;SF Mono&quot;, Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;
+    --r-card: 16px;
+    --r-inner: 4px;
+    --ok: #14c79a;
+    --ok-text: #0b6e50;
+    --bad-text: #9c3b24;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font: 400 17px/1.55 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  .shell { max-width: 1120px; margin: 0 auto; padding: 0 24px 72px; }
+
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 6px 16px;
+    padding: 20px 0; border-bottom: 1px solid var(--line);
+  }
+  .wordmark { font: 600 16px/1 var(--sans); }
+  .wordmark .tick { color: var(--ok); }
+  .runmeta { font: 400 12px/1 var(--mono); color: var(--ink-2); }
+
+  .herozone {
+    background-image: repeating-linear-gradient(135deg, rgba(20,19,17,0.028) 0 1px, transparent 1px 9px);
+    margin: 0 -24px; padding: 0 24px 26px;
+  }
+  .eyebrow {
+    font: 500 11px/1 var(--mono); letter-spacing: 0.18em; color: var(--ink-3);
+    text-transform: uppercase; margin: 52px 0 14px;
+  }
+  h1 {
+    font: 600 44px/1.15 var(--sans); letter-spacing: -0.02em;
+    margin: 0 0 18px; max-width: 21ch;
+    text-wrap: balance;
+  }
+  .sub { max-width: 62ch; color: var(--ink-2); margin: 0 0 26px; }
+  .sub b { color: var(--ink); font-weight: 500; }
+  .receipt {
+    display: flex; gap: 8px 18px; flex-wrap: wrap; align-items: baseline;
+    font: 400 11px/1.6 var(--mono); letter-spacing: 0.08em; color: var(--ink-3);
+    border: 1px solid var(--line); border-radius: var(--r-inner);
+    background: var(--surface); padding: 9px 14px;
+  }
+  .receipt b { color: var(--ink); font-weight: 500; }
+
+  .seclabel {
+    font: 500 11px/1 var(--mono); letter-spacing: 0.18em; color: var(--ink-3);
+    text-transform: uppercase; margin: 46px 0 16px;
+  }
+  .diffbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  details.diffbar { display: block; }
+  details.diffbar &gt; summary { display: inline-block; }
+  .filechip {
+    display: inline-flex; align-items: center; gap: 8px;
+    font: 400 12px/1 var(--mono); color: var(--ink);
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 999px; padding: 7px 12px; cursor: pointer;
+    transition: border-color 0.15s ease-out, background-color 0.15s ease-out;
+  }
+  .filechip:hover { border-color: var(--line-strong); }
+  .filechip:active { transform: scale(0.98); }
+  .filechip.is-flash { border-color: var(--ink); background: #fffdf9; }
+  .filechip:focus-visible { outline: 3px solid #ff5a00; outline-offset: 3px; }
+  code.path { cursor: pointer; }
+  code.path:hover { border-left-width: 3</pre>
+          </div>
+        </div>
+      </details>
+    </article>
+  </main>
+
+  <section class="ledger" aria-labelledby="ledger-h">
+    <div class="seclabel" id="ledger-h" style="margin: 0 0 12px">Claim ledger</div>
+    <p>Every verdict above cites the evidence that decided it. Nothing on this page is
+    asserted above the evidence behind it. Re-check everything by regenerating the report:</p>
+    <div class="copyrow">
+      <code id="repro-cmd">claimcheck verify --repo &lt;path&gt; --claims-file claims.md</code>
+      <button class="copybtn" data-copy="claimcheck verify --repo <path> --claims-file claims.md">Copy</button>
+    </div>
+    <p style="margin: 6px 0 0"><b>VERIFIED</b>: evidence directly proves the claim true.
+    <b>REFUTED</b>: evidence directly proves it false.
+    <b>UNVERIFIABLE</b>: the repository cannot decide it, and the report refuses to guess.</p>
+  </section>
+</div>
+
+<script>
+  (function () {
+    var filterBtns = Array.prototype.slice.call(document.querySelectorAll(".filter"));
+    var cards = Array.prototype.slice.call(document.querySelectorAll("main .card"));
+    filterBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        filterBtns.forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        var f = btn.getAttribute("data-filter");
+        cards.forEach(function (card) {
+          var show = f === "all" || card.classList.contains(f);
+          card.classList.toggle("is-hidden", !show);
+        });
+      });
+    });
+
+    function openDiff() {
+      var details = document.querySelector("details.diffbar");
+      if (details) details.open = true;
+      return document.querySelector(".diffbody");
+    }
+
+    function flashChip(name) {
+      var chip = document.querySelector('.filechip[data-file="' + name + '"]');
+      if (chip) {
+        chip.scrollIntoView({ block: "center" });
+        chip.classList.add("is-flash");
+        setTimeout(function () { chip.classList.remove("is-flash"); }, 1200);
+      }
+    }
+
+    document.querySelectorAll(".filechip[data-file]").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        var body = openDiff();
+        if (body) body.scrollIntoView({ block: "start" });
+      });
+    });
+
+    document.querySelectorAll("code.path").forEach(function (el) {
+      el.addEventListener("click", function () {
+        var text = el.textContent || "";
+        var m = text.match(/([A-Za-z0-9_\-./]+\.[a-z]+)/);
+        if (m) {
+          openDiff();
+          flashChip(m[1]);
+        }
+      });
+    });
+
+    var copyBtn = document.querySelector(".copybtn");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", function () {
+        var text = copyBtn.getAttribute("data-copy") || "";
+        var done = function () {
+          copyBtn.textContent = "Copied";
+          setTimeout(function () { copyBtn.textContent = "Copy"; }, 1400);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, done);
+        } else { done(); }
+      });
+    }
+  })();
+</script>
+</body>
+</html>

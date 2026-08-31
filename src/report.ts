@@ -371,6 +371,12 @@ ${claimsBody}
 
 <script>
   (function () {
+    if (location.search.indexOf("open=evidence") >= 0) {
+      var d = document.querySelector("details.diffbar");
+      if (d) d.open = true;
+      var tr = document.querySelector("details.trail");
+      if (tr) tr.open = true;
+    }
     var filterBtns = Array.prototype.slice.call(document.querySelectorAll(".filter"));
     var cards = Array.prototype.slice.call(document.querySelectorAll("main .card"));
     filterBtns.forEach(function (btn) {
