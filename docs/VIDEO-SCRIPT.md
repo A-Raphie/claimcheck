@@ -44,8 +44,8 @@ Action: open diff, click trail, scroll settle line, click filter chip.
 
 ### Scene 5: Self-audit + close (2:05-2:40) · Hot take (5 pts) + links
 Show: claimcheck run on Claimcheck's own repo (5 claims verified with citations), then
-GitHub repo page.
+the landing page (site only, no GitHub on camera).
 Say: "The last claim we checked is our own submission: five claims about Claimcheck,
 verified by Claimcheck. Agents will keep telling you things are done. Ask for the
 receipts. Repo and live report are on screen."
-Action: show self-audit verdicts, then repo page with URL. Hold 5s.
+Action: show self-audit verdicts, then landing with site URL. Hold 5s.

@@ -56,23 +56,12 @@ export class Agent {
   }
 
   async chat(call: AgentCall, attempt = 0): Promise<string> {
-    const res = await fetch(`${this.baseUrl}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        authorization: `Bearer ${this.apiKey}`,
-      },
-      body: JSON.stringify({
-        model: this.model,
-        temperature: this.temperature,
-        max_tokens: call.maxTokens ?? 2048,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: call.system },
-          { role: "user", content: call.user },
-        ],
-      }),
-    });
+    let res: Response;
+    try {
+      res = await this.fetchWithNetworkRetry(call, attempt);
+    } catch (err) {
+      throw new AgentError(`model call ${call.label} failed: ${(err as Error).message}`);
+    }
     if (res.status === 429 && attempt < 6) {
       const body = await res.text().catch(() => "");
       let waitMs = 15_000;
@@ -106,6 +95,38 @@ export class Agent {
         (Number(u.completion_tokens ?? 0) / 1e6) * price[1];
     }
     return text;
+  }
+
+  /** Networks flap: DNS and connect failures get the same patience as 429s. */
+  private async fetchWithNetworkRetry(call: AgentCall, attempt: number): Promise<Response> {
+    try {
+      return await fetch(`${this.baseUrl}/chat/completions`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${this.apiKey}`,
+        },
+        body: JSON.stringify({
+          model: this.model,
+          temperature: this.temperature,
+          max_tokens: call.maxTokens ?? 2048,
+          response_format: { type: "json_object" },
+          messages: [
+            { role: "system", content: call.system },
+            { role: "user", content: call.user },
+          ],
+        }),
+        signal: AbortSignal.timeout(60_000),
+      });
+    } catch (err) {
+      if (attempt < 8) {
+        const wait = 5_000;
+        console.error(`  network on ${call.label}: retrying in ${wait / 1000}s (attempt ${attempt + 1}/8)`);
+        await new Promise((r) => setTimeout(r, wait));
+        return this.fetchWithNetworkRetry(call, attempt + 1);
+      }
+      throw err;
+    }
   }
 
   async chatJson<T>(call: AgentCall, attempt = 0): Promise<T> {

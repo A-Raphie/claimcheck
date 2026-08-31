@@ -19,23 +19,23 @@ def osa(script):
 def cliclick(cmd):
     sh(f"cliclick {cmd}")
 
+DEMO_WINDOW_FLAG = "/tmp/claimcheck-demo-window"
+
 def fullscreen_front(url=None):
-    """Put Chrome frontmost, fill the entire frame, optionally navigate active tab."""
+    """Open ONE dedicated demo window (first call), then navigate and fill it."""
     osa('tell application "Google Chrome" to activate')
     time.sleep(0.8)
     osa('tell application "System Events" to set frontmost of process "Google Chrome" to true')
     time.sleep(0.4)
-    osa('tell application "System Events" to tell process "Google Chrome" to set size of front window to {1710, 1080}')
-    osa('tell application "System Events" to tell process "Google Chrome" to set position of front window to {0, 24}')
-    time.sleep(0.5)
-    cliclick("c:1200,60")
+    if not os.path.exists(DEMO_WINDOW_FLAG):
+        osa('tell application "Google Chrome" to make new window')
+        time.sleep(1.0)
+        open(DEMO_WINDOW_FLAG, "w").write("demo window")
+    osa('tell application "Google Chrome" to set bounds of front window to {0, 24, 1710, 1104}')
     time.sleep(0.5)
     if url:
         osa(f'tell application "Google Chrome" to set URL of active tab of front window to "{url}"')
     time.sleep(1.4)
-    # enter fullscreen if not already (AXFullScreen toggle only when needed is unreliable;
-    # we rely on Chrome already fullscreened manually before recording)
-    time.sleep(0.4)
 
 def record(name, seconds):
     os.makedirs(SEG_DIR, exist_ok=True)
@@ -124,16 +124,17 @@ def scene_close(sec):
     time.sleep(2.5)
     t0 = time.time()
     time.sleep(1.5)
-    fullscreen_front("https://github.com/A-Raphie/claimcheck")
+    fullscreen_front("https://claimcheck-three-snowy.vercel.app/")
     remaining = sec - (time.time() - t0)
     time.sleep(max(2.0, remaining))
 
+# durations from vo/track.wav beat windows (his pauses are the scene cuts)
 SCENES = [
-    ("s1-landing", 14, scene_landing),
-    ("s2-try", 22, scene_try),
-    ("s3-terminal", 62, scene_terminal),
-    ("s4-report", 30, scene_report),
-    ("s5-close", 20, scene_close),
+    ("s1-landing", 16.2, scene_landing),
+    ("s2-try", 23.0, scene_try),
+    ("s3-terminal", 35.6, scene_terminal),
+    ("s4-report", 19.2, scene_report),
+    ("s5-close", 9.9, scene_close),
 ]
 
 if __name__ == "__main__":
