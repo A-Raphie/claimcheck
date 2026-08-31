@@ -71,8 +71,8 @@ export function renderHtmlReport(report: RunReport): string {
     flex-wrap: wrap; gap: 6px 16px;
     padding: 20px 0; border-bottom: 1px solid var(--line);
   }
-  .wordmark { font: 600 16px/1 var(--sans); }
-  .wordmark .tick { color: var(--ok); }
+  .wordmark { font: 600 16px/1 var(--sans); display: inline-flex; align-items: center; gap: 8px; }
+  .wordmark .tickmark { display: block; }
   .runmeta { font: 400 12px/1 var(--mono); color: var(--ink-2); }
 
   .herozone {
@@ -298,7 +298,7 @@ export function renderHtmlReport(report: RunReport): string {
 <body>
 <div class="shell">
   <header class="topbar">
-    <div class="wordmark"><span class="tick" aria-hidden="true">\u2713</span> Claimcheck</div>
+    <div class="wordmark"><svg class="tickmark" width="15" height="15" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#141311"/><path d="M8.5 10.5h5" stroke="#14c79a" stroke-width="3" stroke-linecap="round"/><path d="M19 8l5 5m0-5l-5 5" stroke="#ee6f6f" stroke-width="2.6" stroke-linecap="round"/><path d="M8.5 20h5" stroke="#5ec98c" stroke-width="3" stroke-linecap="round"/><path d="M21.5 17.5c0-1.5 1.3-2.5 2.8-2.5 1.6 0 2.7 1 2.7 2.4 0 1.9-2.6 2-2.6 3.8" stroke="#d9a83e" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="24.3" cy="24.6" r="1.4" fill="#d9a83e"/><path d="M8.5 24.5h5" stroke="#eab308" stroke-width="3" stroke-linecap="round"/></svg> Claimcheck</div>
     <div class="runmeta">${escapeHtml(report.mode)} run · ${report.startedAt.slice(0, 10)}</div>
   </header>
 

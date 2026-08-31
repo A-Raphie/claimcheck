@@ -54,7 +54,7 @@ def last_frame(name):
     return out
 
 def scene_landing(sec):
-    fullscreen_front("https://a-raphie.github.io/claimcheck/")
+    fullscreen_front("https://claimcheck-three-snowy.vercel.app/")
     time.sleep(2.0)
     t0 = time.time()
     def act():
@@ -67,7 +67,7 @@ def scene_landing(sec):
     time.sleep(max(0.5, sec - (time.time() - t0)))
 
 def scene_try(sec):
-    fullscreen_front("https://a-raphie.github.io/claimcheck/try")
+    fullscreen_front("https://claimcheck-three-snowy.vercel.app/try")
     time.sleep(2.0)
     t0 = time.time()
     # click the textarea (center-upper area of the tool card)
@@ -108,7 +108,7 @@ def scene_terminal(sec):
         osa('tell application "System Events" to set frontmost of process "Terminal" to true')
 
 def scene_report(sec):
-    fullscreen_front("https://a-raphie.github.io/claimcheck/report?open=evidence?open=evidence")
+    fullscreen_front("https://claimcheck-three-snowy.vercel.app/report?open=evidence?open=evidence")
     time.sleep(2.5)
     t0 = time.time()
     # scroll to cards
@@ -120,7 +120,7 @@ def scene_report(sec):
     time.sleep(max(1.0, remaining - 1.0))
 
 def scene_close(sec):
-    fullscreen_front("https://a-raphie.github.io/claimcheck/selfaudit.html")
+    fullscreen_front("https://claimcheck-three-snowy.vercel.app/selfaudit.html")
     time.sleep(2.5)
     t0 = time.time()
     time.sleep(1.5)
