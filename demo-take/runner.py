@@ -23,9 +23,13 @@ def fullscreen_front(url=None):
     """Put Chrome frontmost, fill the entire frame, optionally navigate active tab."""
     osa('tell application "Google Chrome" to activate')
     time.sleep(0.8)
+    osa('tell application "System Events" to set frontmost of process "Google Chrome" to true')
+    time.sleep(0.4)
     osa('tell application "System Events" to tell process "Google Chrome" to set size of front window to {1710, 1080}')
     osa('tell application "System Events" to tell process "Google Chrome" to set position of front window to {0, 24}')
-    time.sleep(0.8)
+    time.sleep(0.5)
+    cliclick("c:1200,60")
+    time.sleep(0.5)
     if url:
         osa(f'tell application "Google Chrome" to set URL of active tab of front window to "{url}"')
     time.sleep(1.4)
@@ -67,30 +71,41 @@ def scene_try(sec):
     time.sleep(2.0)
     t0 = time.time()
     # click the textarea (center-upper area of the tool card)
-    cliclick("c:855,470")
+    cliclick("c:855,565")
     time.sleep(0.4)
-    claims = "All tests pass after this change.\nThe bounded cache reduces memory usage by 30 percent."
-    osa(f'tell application "System Events" to keystroke {json.dumps(claims)}')
+    for i, line in enumerate(["All tests pass after this change.", "The bounded cache reduces memory usage by 30 percent."]):
+        if i > 0:
+            osa('tell application "System Events" to key code 36')
+            time.sleep(0.25)
+        osa(f'tell application "System Events" to keystroke {json.dumps(line)}')
+        time.sleep(0.25)
     time.sleep(0.6)
     # click Plan the evidence (below textarea)
-    cliclick("c:500,710")
+    cliclick("c:497,709")
+    time.sleep(0.4)
     remaining = sec - (time.time() - t0)
     time.sleep(max(1.0, remaining - 1.0))
 
 def scene_terminal(sec):
     osa('tell application "Terminal" to activate')
-    time.sleep(0.6)
-    osa('tell application "System Events" to tell process "Terminal" to set size of front window to {1710, 1000}')
-    osa('tell application "System Events" to tell process "Terminal" to set position of front window to {0, 25}')
-    time.sleep(0.6)
+    time.sleep(0.5)
+    osa('tell application "System Events" to set frontmost of process "Terminal" to true')
+    time.sleep(0.4)
     t0 = time.time()
     cmd = ('cd /Users/raphie/Documents/Hackathons/claimcheck && clear && '
            'node dist/cli.js verify --repo eval/cases/02-tests-pass-false/repo '
-           '--claims "All tests pass after this change." "Division by zero now throws an error." && '
+           '--claims-file demo-take/demo-claims.md && '
            'sleep 1 && head -12 eval-results/advanced-iter2/summary.md')
-    osa(f'tell application "Terminal" to do script "{cmd}" in front window')
-    # give the real model its ~40-60s on camera
-    time.sleep(max(1.0, sec - (time.time() - t0)))
+    # dedicated NEW window: no other session can ever appear on camera
+    osa(f'tell application "Terminal" to do script "{cmd}"')
+    time.sleep(1.2)
+    osa('tell application "System Events" to tell process "Terminal" to set size of front window to {1710, 1000}')
+    osa('tell application "System Events" to tell process "Terminal" to set position of front window to {0, 25}')
+    # give the real model its ~40-60s on camera, re-fronting Terminal so
+    # nothing (notifications, other apps) steals the frame mid-take
+    while time.time() - t0 < sec:
+        time.sleep(4)
+        osa('tell application "System Events" to set frontmost of process "Terminal" to true')
 
 def scene_report(sec):
     fullscreen_front("https://claimcheck-three-snowy.vercel.app/report?open=evidence?open=evidence")
