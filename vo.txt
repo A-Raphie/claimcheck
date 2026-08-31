@@ -1,0 +1,9 @@
+Your coding agent just said: all tests pass, no breaking changes, edge cases covered. Who checks? Not the CI badge. Not the diff. Claimcheck does. It runs the real checks, and answers with receipts.
+
+Here is the planner, live. I paste claims, one per line. Run. Each claim gets a class. This one is test status, so it gets a suite run. This one is performance: nothing in the repo can decide it, so it gets flagged, and told what would settle it. A committed benchmark.
+
+Now the scored half. Claimcheck copies the repo, runs the suite, reads the files, and the verifier issues verdicts from what actually happened. Watch. All tests pass: refuted. The suite has a failing test, right on screen. Across fourteen benchmark cases, the one prompt baseline scores eighty seven and a half percent. The agent pipeline scores ninety point six, with both hard cases at one hundred. And when it is wrong, it is wrong in the safe direction: it hesitates instead of guessing.
+
+Every run produces this report. The change under review, with its real diff. Each claim weighted by verdict: red means refuted, and here is the receipt, the exact output that failed. This claim nobody could check, so it says so, and names the benchmark that would settle it.
+
+The last claims we checked are our own. Five claims about Claimcheck, verified by Claimcheck. Agents will keep telling you things are done. Ask for the receipts.
