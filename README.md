@@ -121,7 +121,7 @@ errors are all cases where it refused to be confident. We think that is the corr
 direction for agents that touch real code: a verifier whose errors are visible hesitations
 beats one whose errors look like answers.
 
-**Live:** https://claimcheck-three-snowy.vercel.app/ · planner at [/try.html](https://claimcheck-three-snowy.vercel.app/try.html) · scored report at [/report.html](https://claimcheck-three-snowy.vercel.app/report.html)
+**Live:** https://claimcheck-three-snowy.vercel.app/ · planner at [/try.html](https://claimcheck-three-snowy.vercel.app/try) · scored report at [/report.html](https://claimcheck-three-snowy.vercel.app/report)
 
 ## Reproduce
 

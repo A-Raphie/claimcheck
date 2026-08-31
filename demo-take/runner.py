@@ -50,7 +50,7 @@ def last_frame(name):
     return out
 
 def scene_landing(sec):
-    fullscreen_front("https://claimcheck-three-snowy.vercel.app/index.html")
+    fullscreen_front("https://claimcheck-three-snowy.vercel.app/")
     time.sleep(2.0)
     t0 = time.time()
     def act():
@@ -63,7 +63,7 @@ def scene_landing(sec):
     time.sleep(max(0.5, sec - (time.time() - t0)))
 
 def scene_try(sec):
-    fullscreen_front("https://claimcheck-three-snowy.vercel.app/try.html")
+    fullscreen_front("https://claimcheck-three-snowy.vercel.app/try")
     time.sleep(2.0)
     t0 = time.time()
     # click the textarea (center-upper area of the tool card)
@@ -93,7 +93,7 @@ def scene_terminal(sec):
     time.sleep(max(1.0, sec - (time.time() - t0)))
 
 def scene_report(sec):
-    fullscreen_front("https://claimcheck-three-snowy.vercel.app/report.html?open=evidence")
+    fullscreen_front("https://claimcheck-three-snowy.vercel.app/report?open=evidence?open=evidence")
     time.sleep(2.5)
     t0 = time.time()
     # scroll to cards

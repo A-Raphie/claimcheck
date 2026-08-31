@@ -165,10 +165,10 @@ export function renderTryPage(): string {
 <body>
 <div class="shell">
   <header class="topbar">
-    <a class="wordmark" href="index.html"><span class="tick" aria-hidden="true">\u2713</span> Claimcheck</a>
+    <a class="wordmark" href="/"><span class="tick" aria-hidden="true">\u2713</span> Claimcheck</a>
     <nav aria-label="Site">
       <a href="index.html#how">How it works</a>
-      <a href="report.html">Live report</a>
+      <a href="/report">Live report</a>
       <a href="index.html#reproduce">Reproduce</a>
     </nav>
   </header>
@@ -208,12 +208,12 @@ export function renderTryPage(): string {
   <p class="note"><b>Step 2</b> is running Claimcheck on your repository: the checker performs
   these exact actions in a sandbox copy, then returns VERIFIED, REFUTED, or UNVERIFIABLE for
   each claim, with the output that decided it. The <a href="index.html#reproduce">zero-key
-  repro path</a> runs the whole thing free; the <a href="report.html">live report</a> shows a
+  repro path</a> runs the whole thing free; the <a href="/report">live report</a> shows a
   finished run.</p>
 
   <footer>
     <span>Built for the micro1 Frontier Engineering Challenge 2026 · built with coding agents, disclosed</span>
-    <span><a href="report.html">live report</a> · <a href="index.html">about</a></span>
+    <span><a href="/report">live report</a> · <a href="/">about</a></span>
   </footer>
 </div>
 
