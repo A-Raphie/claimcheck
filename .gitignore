@@ -16,3 +16,5 @@ demo-take/segs/
 demo-take/*.mov
 demo-take/vo/
 demo-take/*.png
+.vercel
+.env*
